@@ -1,12 +1,12 @@
 import NextLink from "next/link";
 
-const Home = () => {
+const Admin = () => {
   return (
     <div className="">
       <h1>Home Page</h1>
-      <NextLink href="/admin">To admin</NextLink>
+      <NextLink href="/">To home</NextLink>
     </div>
   );
 };
 
-export default Home;
+export default Admin;
