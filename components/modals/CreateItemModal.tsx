@@ -1,29 +1,102 @@
-import { Button, Checkbox, Input, InputNumber, Modal, Typography } from "antd";
+import {
+  Button,
+  Checkbox,
+  DatePicker,
+  Input,
+  InputNumber,
+  Modal,
+  Typography,
+} from "antd";
 import { ICollection } from "../../types";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import useCreateItemMutation from "../../hooks/mutations/items/useCreateItemMutation";
 
 interface IProps {
   isVisible: boolean;
   collection: ICollection;
+  onClose: () => void;
 }
 
 interface IFormValues {
-  integer: object;
-  date: object;
-  text: object;
-  multiLineText: object;
-  boolean: object;
+  integer: { [key: string]: number };
+  date: { [key: string]: string };
+  text: { [key: string]: string };
+  multiLineText: { [key: string]: string };
+  boolean: { [key: string]: boolean };
 }
 
-const schema = yup.object({});
+const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
+  const createItemMutation = useCreateItemMutation();
 
-const CreateItemModal = ({ isVisible, collection }: IProps) => {
-  const form = useForm<IFormValues>({ resolver: yupResolver(schema) });
+  const getIntegerSchema = () => {
+    const schema: any = {};
+
+    for (let el of collection.fields.integer) {
+      schema[el] = yup.number().required();
+    }
+
+    return yup.object(schema);
+  };
+
+  const getBooleanSchema = () => {
+    const schema: any = {};
+
+    for (let el of collection.fields.boolean) {
+      schema[el] = yup.boolean().default(false);
+    }
+
+    return yup.object(schema);
+  };
+
+  const getTextSchema = () => {
+    const schema: any = {};
+
+    for (let el of collection.fields.text) {
+      schema[el] = yup.string().trim().required();
+    }
+
+    return yup.object(schema);
+  };
+
+  const getMultiLineTextSchema = () => {
+    const schema: any = {};
+
+    for (let el of collection.fields.multiLineText) {
+      schema[el] = yup.string().trim().required();
+    }
+
+    return yup.object(schema);
+  };
+
+  const getDateSchema = () => {
+    const schema: any = {};
+
+    for (let el of collection.fields.date) {
+      schema[el] = yup.string().required();
+    }
+
+    return yup.object(schema);
+  };
+
+  const form = useForm<IFormValues>({
+    resolver: yupResolver(
+      yup.object({
+        integer: getIntegerSchema(),
+        boolean: getBooleanSchema(),
+        text: getTextSchema(),
+        multiLineText: getMultiLineTextSchema(),
+        date: getDateSchema(),
+      })
+    ),
+  });
 
   const handleSubmit = form.handleSubmit((values) => {
-    console.log(values);
+    createItemMutation.mutate({
+      collectionId: collection._id,
+      fields: values,
+    });
   });
 
   const hasTextFields = !!collection.fields.text.length;
@@ -36,7 +109,7 @@ const CreateItemModal = ({ isVisible, collection }: IProps) => {
     <Modal
       title="Create item"
       visible={isVisible}
-      onCancel={() => {}}
+      onCancel={() => onClose()}
       footer={[
         <Button
           key="submitBtn"
@@ -46,16 +119,16 @@ const CreateItemModal = ({ isVisible, collection }: IProps) => {
         >
           Create
         </Button>,
-        <Button key="cancel-btn" htmlType="button" onClick={() => {}}>
+        <Button key="cancel-btn" htmlType="button" onClick={() => onClose()}>
           Cancel
         </Button>,
       ]}
     >
       {hasTextFields && (
         <>
-          <Typography.Paragraph className="font-[500] text-[18px]">
-            Text fields
-          </Typography.Paragraph>
+          <Typography.Text className="block mt-[15px] font-[500] text-[18px]">
+            Boolean fields
+          </Typography.Text>
           {collection.fields.text.map((fieldName) => (
             <>
               <Typography.Text>{fieldName}</Typography.Text>
@@ -65,7 +138,10 @@ const CreateItemModal = ({ isVisible, collection }: IProps) => {
                 render={({ field }) => (
                   <Input
                     className="mt-[5px]"
-                    // {...(form.formState.errors.password && { status: "error" })}
+                    {...(form.formState.errors.text &&
+                      form.formState.errors.text[fieldName] && {
+                        status: "error",
+                      })}
                     {...field}
                   />
                 )}
@@ -87,11 +163,7 @@ const CreateItemModal = ({ isVisible, collection }: IProps) => {
                   name={`boolean.${fieldName}`}
                   control={form.control}
                   render={({ field }) => (
-                    <Checkbox
-                      className="mt-[5px]"
-                      // {...(form.formState.errors.password && { status: "error" })}
-                      {...field}
-                    />
+                    <Checkbox className="mt-[5px]" {...field} />
                   )}
                 />
                 <Typography.Text>{fieldName}</Typography.Text>
@@ -116,7 +188,10 @@ const CreateItemModal = ({ isVisible, collection }: IProps) => {
                   render={({ field }) => (
                     <Input
                       className="mt-[5px]"
-                      // {...(form.formState.errors.password && { status: "error" })}
+                      {...(form.formState.errors.integer &&
+                        form.formState.errors.integer[fieldName] && {
+                          status: "error",
+                        })}
                       {...field}
                     />
                   )}
@@ -142,7 +217,10 @@ const CreateItemModal = ({ isVisible, collection }: IProps) => {
                   render={({ field }) => (
                     <Input.TextArea
                       className="mt-[5px]"
-                      // {...(form.formState.errors.password && { status: "error" })}
+                      {...(form.formState.errors.multiLineText &&
+                        form.formState.errors.multiLineText[fieldName] && {
+                          status: "error",
+                        })}
                       {...field}
                     />
                   )}
@@ -152,6 +230,33 @@ const CreateItemModal = ({ isVisible, collection }: IProps) => {
           ))}
         </>
       )}
+
+      {hasDateFields && (
+        <>
+          <Typography.Text className="block mt-[15px] font-[500] text-[18px]">
+            Date fields
+          </Typography.Text>
+          {collection.fields.date.map((fieldName) => (
+            <>
+              <div className="">
+                <Typography.Text className="block">{fieldName}</Typography.Text>
+                <DatePicker
+                  className="w-full mt-[5px]"
+                  onChange={(date) => {
+                    if (date) {
+                      form.setValue(`date.${fieldName}`, date.toString());
+                    } else {
+                      form.resetField(`date.${fieldName}`);
+                    }
+                  }}
+                />
+              </div>
+            </>
+          ))}
+        </>
+      )}
+
+      <div className=""></div>
     </Modal>
   );
 };

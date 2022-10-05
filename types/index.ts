@@ -10,6 +10,17 @@ export interface IUser {
   isBlocked: boolean;
 }
 
+export interface IItem {
+  _id: string;
+  fields: {
+    integer: { [key: string]: number };
+    date: { [key: string]: string };
+    text: { [key: string]: string };
+    multiLineText: { [key: string]: string };
+    boolean: { [key: string]: boolean };
+  };
+}
+
 export interface ICollection {
   _id: string;
   topic: CollectionTopicType;

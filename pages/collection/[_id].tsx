@@ -55,6 +55,7 @@ const CollectionDetail = () => {
           <CreateItemModal
             isVisible={isCreateItemModalVisible}
             collection={getCollectionQuery.data}
+            onClose={() => setIsCreateItemModalVisible(false)}
           />
         </>
       )}
