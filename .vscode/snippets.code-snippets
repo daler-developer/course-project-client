@@ -1,0 +1,77 @@
+{
+	"export default": {
+		"prefix": "ed",
+		"body": [
+			"export default $0"
+		]
+	},
+	"import default": {
+		"prefix": "impd",
+		"body": [
+			"import $1 from '$0'"
+		]
+	},
+	"import": {
+		"prefix": "imp",
+		"body": [
+			"import { $0 } from '$1'"
+		]
+	},
+	"log": {
+		"prefix": "clg",
+		"body": [
+			"console.log($0)"
+		]
+	},
+	"Func": {
+		"prefix": "func",
+		"body": [
+			"const $1 = ($2) => {",
+			"  $0",
+			"}"
+		]
+	},
+	"handler": {
+		"prefix": "handler",
+		"body": [
+			"const handle$1 = () => {",
+			"  $0",
+			"}",
+		]
+	},
+	"useState": {
+		"prefix": "useState",
+		"body": [
+			"const [$1, set$1] = useState($0)"
+		]
+	},
+	"useEffect": {
+		"prefix": "useEffect",
+		"body": [
+			"useEffect(() => {",
+			"  $0",
+			"}, [$1])",
+		]
+	},
+	"useRef": {
+		"prefix": "useRef",
+		"body": [
+			"const $1Ref = useRef(null)$0"
+		]
+	},
+	"Component": {
+		"prefix": "component",
+		"body": [
+			"",
+			"interface IProps {",
+			"  $1",
+			"}",
+			"",
+			"const $TM_FILENAME_BASE = ({}: IProps) => {",
+			"  return $0",
+			"}",
+			"",
+			"export default $TM_FILENAME_BASE",
+		]
+	},
+}

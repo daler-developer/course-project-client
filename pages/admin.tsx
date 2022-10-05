@@ -1,10 +1,10 @@
 import NextLink from "next/link";
+import Users from "../components/admin/users/Users";
 
 const Admin = () => {
   return (
     <div className="">
-      <h1>Home Page</h1>
-      <NextLink href="/">To home</NextLink>
+      <Users />
     </div>
   );
 };

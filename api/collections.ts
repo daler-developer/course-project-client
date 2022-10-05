@@ -1,0 +1,47 @@
+import { CreateCollectionDto, ICollection } from "../types";
+import apiClient from "../utils/apiClient";
+
+export const createCollections = async ({
+  desc,
+  fields,
+  name,
+  topic,
+  image,
+}: CreateCollectionDto) => {
+  const form = new FormData();
+
+  form.append("name", name);
+  form.append("topic", topic);
+  form.append("desc", desc);
+  form.append("fields", JSON.stringify(fields));
+
+  if (image) {
+    form.append("image", image);
+  }
+
+  return await apiClient.post<{ collection: ICollection }>(
+    "/api/collections",
+    form
+  );
+};
+
+export const getProfileCollections = async ({ offset }: { offset: number }) => {
+  return await apiClient.get<{ collections: ICollection[] }>(
+    "/api/profile/collections",
+    {
+      params: {
+        offset,
+      },
+    }
+  );
+};
+
+export const deleteCollection = async ({
+  collectionId,
+}: {
+  collectionId: string;
+}) => {
+  return await apiClient.delete<{ deleted: true[] }>(
+    `/api/collections/${collectionId}`
+  );
+};
