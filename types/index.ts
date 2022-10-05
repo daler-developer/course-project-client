@@ -17,6 +17,13 @@ export interface ICollection {
   desc: string;
   imageUrl?: string;
   creator: IUser;
+  fields: {
+    boolean: string[];
+    date: string[];
+    text: string[];
+    multiLineText: string[];
+    integer: string[];
+  };
 }
 
 export type AxiosErrorResponseType = AxiosError<{

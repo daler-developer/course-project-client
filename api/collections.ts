@@ -45,3 +45,13 @@ export const deleteCollection = async ({
     `/api/collections/${collectionId}`
   );
 };
+
+export const getCollection = async ({
+  collectionId,
+}: {
+  collectionId: string;
+}) => {
+  return await apiClient.get<{ collection: ICollection }>(
+    `/api/collections/${collectionId}`
+  );
+};
