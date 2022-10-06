@@ -93,10 +93,17 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
   });
 
   const handleSubmit = form.handleSubmit((values) => {
-    createItemMutation.mutate({
-      collectionId: collection._id,
-      fields: values,
-    });
+    createItemMutation.mutate(
+      {
+        collectionId: collection._id,
+        fields: values,
+      },
+      {
+        onSettled() {
+          form.reset();
+        },
+      }
+    );
   });
 
   const hasTextFields = !!collection.fields.text.length;
@@ -114,7 +121,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
         <Button
           key="submitBtn"
           htmlType="submit"
-          loading={false}
+          loading={createItemMutation.isLoading}
           onClick={handleSubmit}
         >
           Create
@@ -240,6 +247,12 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
             <>
               <div className="">
                 <Typography.Text className="block">{fieldName}</Typography.Text>
+                {form.formState.errors.date &&
+                  form.formState.errors.date[fieldName] && (
+                    <Typography.Text type="danger">
+                      {form.formState.errors.date[fieldName]!.message}
+                    </Typography.Text>
+                  )}
                 <DatePicker
                   className="w-full mt-[5px]"
                   onChange={(date) => {

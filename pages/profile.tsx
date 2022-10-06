@@ -10,19 +10,23 @@ const Profile = () => {
   return (
     <div className="">
       <Typography.Title level={1} className="text-center">
-        Profile
+        You collections
       </Typography.Title>
 
-      <NextLink href="/create-collection" passHref>
-        <Button type="primary">New</Button>
-      </NextLink>
+      <div className="mt-[10px] mx-auto max-w-[500px]">
+        <NextLink href="/create-collection" passHref>
+          <Button block type="primary">
+            New
+          </Button>
+        </NextLink>
 
-      <div className="mt-[10px]">
-        <Collections
-          collections={getCollectionsQuery.allCollections}
-          isFetching={getCollectionsQuery.isFetching}
-          onFetchNextPage={() => getCollectionsQuery.fetchNextPage()}
-        />
+        <div className="mt-[10px]">
+          <Collections
+            collections={getCollectionsQuery.allCollections}
+            isFetching={getCollectionsQuery.isFetching}
+            onFetchNextPage={() => getCollectionsQuery.fetchNextPage()}
+          />
+        </div>
       </div>
     </div>
   );

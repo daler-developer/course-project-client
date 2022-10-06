@@ -15,3 +15,32 @@ export const createItem = async ({
     }
   );
 };
+
+export const getCollectionItems = async ({
+  offset,
+  collectionId,
+}: {
+  offset: number;
+  collectionId: string;
+}) => {
+  return await apiClient.get<{ items: IItem[] }>(
+    `/api/collections/${collectionId}/items`,
+    {
+      params: { offset },
+    }
+  );
+};
+
+export const likeItem = async ({ itemId }: { itemId: string }) => {
+  return await apiClient.patch<{ items: IItem[] }>(`/api/items/${itemId}/like`);
+};
+
+export const deleteItem = async ({ itemId }: { itemId: string }) => {
+  return await apiClient.delete<{ items: IItem[] }>(`/api/items/${itemId}`);
+};
+
+export const unlikeItem = async ({ itemId }: { itemId: string }) => {
+  return await apiClient.patch<{ items: IItem[] }>(
+    `/api/items/${itemId}/unlike`
+  );
+};

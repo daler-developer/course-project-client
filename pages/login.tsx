@@ -65,6 +65,7 @@ const Login = () => {
               style={{ marginTop: "5px" }}
               className="mt-[10px]"
               placeholder="Password"
+              type="password"
               {...(form.formState.errors.password && { status: "error" })}
               {...field}
             />

@@ -2,8 +2,11 @@ import { Button, Spin, Typography } from "antd";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import Items from "../../components/items/Items";
 import CreateItemModal from "../../components/modals/CreateItemModal";
 import useGetCollectionQuery from "../../hooks/queries/collections/useGetCollectionQuery";
+import useGetCollectionItemQuery from "../../hooks/queries/items/useGetCollectionItemQuery";
+import NextLink from "next/link";
 
 const CollectionDetail = () => {
   const [isCreateItemModalVisible, setIsCreateItemModalVisible] =
@@ -14,47 +17,42 @@ const CollectionDetail = () => {
   const getCollectionQuery = useGetCollectionQuery({
     collectionId: router.query._id as string,
   });
+  const getCollectionItemsQuery = useGetCollectionItemQuery({
+    collectionId: router.query._id as string,
+  });
 
   return (
     <div className="">
-      {getCollectionQuery.isFetching && (
+      {getCollectionQuery.isFetching ? (
         <div className="text-center">
-          <Spin size="large" />
+          <Spin />
         </div>
-      )}
-      {getCollectionQuery.isSuccess && (
+      ) : (
         <>
-          <div className="">
-            <div className="mx-auto max-w-[400px]">
-              <Typography.Title level={1}>
-                {getCollectionQuery.data?.name}
-              </Typography.Title>
-              <Typography.Paragraph>
-                Topic: {getCollectionQuery.data.topic}
-              </Typography.Paragraph>
-              <ReactMarkdown>{getCollectionQuery.data.desc}</ReactMarkdown>
-              <div className="">
-                {getCollectionQuery.data.imageUrl && (
-                  <img
-                    className="w-full aspect-video object-cover object-center"
-                    src={getCollectionQuery.data.imageUrl}
-                  />
-                )}
-              </div>
+          <Typography.Title level={1} className="text-center">
+            Items
+          </Typography.Title>
+          <Button
+            block
+            onClick={() => setIsCreateItemModalVisible(true)}
+            type="primary"
+          >
+            Creat new item
+          </Button>
+          {getCollectionItemsQuery.isSuccess && (
+            <div className="mt-[10px]">
+              <Items
+                collection={getCollectionQuery.data!}
+                items={getCollectionItemsQuery.allItems}
+                isFetching={getCollectionItemsQuery.isFetching}
+                onFetchNextPage={() => getCollectionItemsQuery.fetchNextPage()}
+              />
             </div>
-
-            <Button
-              htmlType="button"
-              type="primary"
-              onClick={() => setIsCreateItemModalVisible(true)}
-            >
-              New Item
-            </Button>
-          </div>
+          )}
 
           <CreateItemModal
             isVisible={isCreateItemModalVisible}
-            collection={getCollectionQuery.data}
+            collection={getCollectionQuery.data!}
             onClose={() => setIsCreateItemModalVisible(false)}
           />
         </>
