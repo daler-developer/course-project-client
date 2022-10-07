@@ -31,6 +31,10 @@ export const getCollectionItems = async ({
   );
 };
 
+export const getCollectionItem = async ({ itemId }: { itemId: string }) => {
+  return await apiClient.get<{ item: IItem }>(`/api/items/${itemId}`);
+};
+
 export const likeItem = async ({ itemId }: { itemId: string }) => {
   return await apiClient.patch<{ items: IItem[] }>(`/api/items/${itemId}/like`);
 };

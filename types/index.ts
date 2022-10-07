@@ -12,6 +12,8 @@ export interface IUser {
 
 export interface IItem {
   _id: string;
+  likes_ids: string[];
+  creatorId: string;
   fields: {
     integer: { [key: string]: number };
     date: { [key: string]: string };
@@ -21,6 +23,12 @@ export interface IItem {
   };
 }
 
+export interface IComment {
+  _id: string;
+  text: string;
+  creator: IUser;
+}
+
 export interface ICollection {
   _id: string;
   topic: CollectionTopicType;
@@ -28,6 +36,7 @@ export interface ICollection {
   desc: string;
   imageUrl?: string;
   creator: IUser;
+  creatorId: string;
   fields: {
     boolean: string[];
     date: string[];

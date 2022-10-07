@@ -2,10 +2,10 @@ import { Button, Spin, Typography } from "antd";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import Items from "../../components/items/Items";
-import CreateItemModal from "../../components/modals/CreateItemModal";
-import useGetCollectionQuery from "../../hooks/queries/collections/useGetCollectionQuery";
-import useGetCollectionItemQuery from "../../hooks/queries/items/useGetCollectionItemQuery";
+import Items from "../../../components/items/Items";
+import CreateItemModal from "../../../components/modals/CreateItemModal";
+import useGetCollectionQuery from "../../../hooks/queries/collections/useGetCollectionQuery";
+import useGetCollectionItemQuery from "../../../hooks/queries/items/useGetCollectionItemQuery";
 import NextLink from "next/link";
 
 const CollectionDetail = () => {

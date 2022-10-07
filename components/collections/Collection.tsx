@@ -49,7 +49,7 @@ const Collection = ({ collection }: IProps) => {
         />
       </div>
 
-      <NextLink href={`/collection/${collection._id}`}>
+      <NextLink href={`/collections/${collection._id}/items`}>
         <Button type="link" block className="mt-[10px]">
           See items
         </Button>

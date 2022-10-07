@@ -49,7 +49,7 @@ const Items = ({ items, isFetching, onFetchNextPage, collection }: IProps) => {
       dataIndex: `_id`,
       render(_id: string) {
         return (
-          <NextLink href={`/item/${_id}`} passHref>
+          <NextLink href={`/items/${_id}`} passHref>
             <Button type="link" size="small">
               Open
             </Button>

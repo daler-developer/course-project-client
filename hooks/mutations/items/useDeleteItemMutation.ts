@@ -12,9 +12,12 @@ import {
 } from "../../../types";
 import * as itemsApi from "../../../api/items";
 import useGetMeQuery from "../../queries/users/useGetMeQuery";
+import { useRouter } from "next/router";
 
 export default ({ itemId }: { itemId: string }) => {
   const queryClient = useQueryClient();
+
+  const router = useRouter();
 
   const mutation = useMutation<void, AxiosErrorResponseType>(
     async () => {
@@ -37,6 +40,8 @@ export default ({ itemId }: { itemId: string }) => {
             }
           }
         );
+
+        router.back();
       },
     }
   );
