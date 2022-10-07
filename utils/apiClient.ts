@@ -1,11 +1,9 @@
 import axios from "axios";
 
-console.log(process.env.NODE_ENV);
-
 const apiClient = axios.create({
-  ...(process.env.NODE_ENV === "production" && {
-    baseURL: "https://daler-course-project-server.herokuapp.com",
-  }),
+  // ...(process.env.NODE_ENV === "production" && {
+  //   baseURL: "https://daler-course-project-server.herokuapp.com",
+  // }),
 });
 
 apiClient.interceptors.request.use((config) => {
