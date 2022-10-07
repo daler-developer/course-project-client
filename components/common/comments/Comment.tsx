@@ -6,7 +6,9 @@ interface IProps {
 }
 
 const Comment = ({ comment }: IProps) => {
-  return <AntDComment author="Daler" content={comment.text} />;
+  return (
+    <AntDComment author={comment.creator.username} content={comment.text} />
+  );
 };
 
 export default Comment;
