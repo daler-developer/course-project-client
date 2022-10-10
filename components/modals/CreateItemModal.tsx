@@ -5,13 +5,16 @@ import {
   Input,
   InputNumber,
   Modal,
+  Tag,
   Typography,
 } from "antd";
 import { ICollection } from "../../types";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useCreateItemMutation from "../../hooks/mutations/items/useCreateItemMutation";
+import { ChangeEvent, useEffect, useState } from "react";
+import TagInput from "../create-item-form/TagInput";
 
 interface IProps {
   isVisible: boolean;
@@ -20,11 +23,15 @@ interface IProps {
 }
 
 interface IFormValues {
-  integer: { [key: string]: number };
-  date: { [key: string]: string };
-  text: { [key: string]: string };
-  multiLineText: { [key: string]: string };
-  boolean: { [key: string]: boolean };
+  name: string;
+  tags: string[];
+  fields: {
+    integer: { [key: string]: number };
+    date: { [key: string]: string };
+    text: { [key: string]: string };
+    multiLineText: { [key: string]: string };
+    boolean: { [key: string]: boolean };
+  };
 }
 
 const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
@@ -83,28 +90,58 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
   const form = useForm<IFormValues>({
     resolver: yupResolver(
       yup.object({
-        integer: getIntegerSchema(),
-        boolean: getBooleanSchema(),
-        text: getTextSchema(),
-        multiLineText: getMultiLineTextSchema(),
-        date: getDateSchema(),
+        name: yup.string().required().min(1).max(20),
+        tags: yup.array().of(yup.string().required()).required().default([]),
+        fields: yup.object({
+          integer: getIntegerSchema(),
+          boolean: getBooleanSchema(),
+          text: getTextSchema(),
+          multiLineText: getMultiLineTextSchema(),
+          date: getDateSchema(),
+        }),
       })
     ),
+    defaultValues: {
+      tags: [],
+    },
   });
 
+  useWatch({ control: form.control, name: "tags" });
+
+  useEffect(() => {
+    initAdditionalFormFields();
+  }, []);
+
+  const initAdditionalFormFields = () => {
+    form.register("tags");
+  };
+
   const handleSubmit = form.handleSubmit((values) => {
-    createItemMutation.mutate(
-      {
-        collectionId: collection._id,
-        fields: values,
-      },
-      {
-        onSettled() {
-          form.reset();
-        },
-      }
-    );
+    console.log(values);
+    // createItemMutation.mutate(
+    //   {
+    //     collectionId: collection._id,
+    //     fields: values.fields,
+    //     name: values.name,
+    //     tags: values.tags,
+    //   },
+    //   {
+    //     onSettled() {
+    //       form.reset();
+    //     },
+    //   }
+    // );
   });
+
+  const isTagSelected = (tag: string) => {
+    return form.getValues("tags").includes(tag);
+  };
+
+  const handleAddNewTag = (newTag: string) => {
+    if (!isTagSelected(newTag)) {
+      form.setValue("tags", [...form.getValues("tags"), newTag]);
+    }
+  };
 
   const hasTextFields = !!collection.fields.text.length;
   const hasBooleanFields = !!collection.fields.boolean.length;
@@ -115,7 +152,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
   return (
     <Modal
       title="Create item"
-      visible={isVisible}
+      open={isVisible}
       onCancel={() => onClose()}
       footer={[
         <Button
@@ -131,22 +168,49 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
         </Button>,
       ]}
     >
+      <Controller
+        name="name"
+        control={form.control}
+        render={({ field }) => (
+          <Input
+            placeholder="Name"
+            className="mt-[5px]"
+            {...(form.formState.errors.name && {
+              status: "error",
+            })}
+            {...field}
+          />
+        )}
+      />
+
+      <div className="mt-[5px]">
+        <TagInput onAddTag={handleAddNewTag} />
+      </div>
+
+      {!!form.getValues("tags").length && (
+        <div className="mt-[10px]">
+          {form.getValues("tags").map((tag) => (
+            <Tag>{tag}</Tag>
+          ))}
+        </div>
+      )}
+
       {hasTextFields && (
         <>
           <Typography.Text className="block mt-[15px] font-[500] text-[18px]">
-            Boolean fields
+            Text fields
           </Typography.Text>
           {collection.fields.text.map((fieldName) => (
             <>
               <Typography.Text>{fieldName}</Typography.Text>
               <Controller
-                name={`text.${fieldName}`}
+                name={`fields.text.${fieldName}`}
                 control={form.control}
                 render={({ field }) => (
                   <Input
                     className="mt-[5px]"
-                    {...(form.formState.errors.text &&
-                      form.formState.errors.text[fieldName] && {
+                    {...(form.formState.errors.fields?.text &&
+                      form.formState.errors.fields.text[fieldName] && {
                         status: "error",
                       })}
                     {...field}
@@ -167,7 +231,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
             <>
               <div className="flex items-center gap-[5px]">
                 <Controller
-                  name={`boolean.${fieldName}`}
+                  name={`fields.boolean.${fieldName}`}
                   control={form.control}
                   render={({ field }) => (
                     <Checkbox className="mt-[5px]" {...field} />
@@ -190,13 +254,13 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
               <div className="">
                 <Typography.Text>{fieldName}</Typography.Text>
                 <Controller
-                  name={`integer.${fieldName}`}
+                  name={`fields.integer.${fieldName}`}
                   control={form.control}
                   render={({ field }) => (
                     <Input
                       className="mt-[5px]"
-                      {...(form.formState.errors.integer &&
-                        form.formState.errors.integer[fieldName] && {
+                      {...(form.formState.errors.fields?.integer &&
+                        form.formState.errors.fields.integer[fieldName] && {
                           status: "error",
                         })}
                       {...field}
@@ -219,13 +283,15 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
               <div className="">
                 <Typography.Text>{fieldName}</Typography.Text>
                 <Controller
-                  name={`multiLineText.${fieldName}`}
+                  name={`fields.multiLineText.${fieldName}`}
                   control={form.control}
                   render={({ field }) => (
                     <Input.TextArea
                       className="mt-[5px]"
-                      {...(form.formState.errors.multiLineText &&
-                        form.formState.errors.multiLineText[fieldName] && {
+                      {...(form.formState.errors.fields?.multiLineText &&
+                        form.formState.errors.fields.multiLineText[
+                          fieldName
+                        ] && {
                           status: "error",
                         })}
                       {...field}
@@ -247,19 +313,22 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
             <>
               <div className="">
                 <Typography.Text className="block">{fieldName}</Typography.Text>
-                {form.formState.errors.date &&
-                  form.formState.errors.date[fieldName] && (
+                {form.formState.errors.fields?.date &&
+                  form.formState.errors.fields.date[fieldName] && (
                     <Typography.Text type="danger">
-                      {form.formState.errors.date[fieldName]!.message}
+                      {form.formState.errors.fields.date[fieldName]!.message}
                     </Typography.Text>
                   )}
                 <DatePicker
                   className="w-full mt-[5px]"
                   onChange={(date) => {
                     if (date) {
-                      form.setValue(`date.${fieldName}`, date.toString());
+                      form.setValue(
+                        `fields.date.${fieldName}`,
+                        date.toString()
+                      );
                     } else {
-                      form.resetField(`date.${fieldName}`);
+                      form.resetField(`fields.date.${fieldName}`);
                     }
                   }}
                 />
@@ -268,8 +337,6 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
           ))}
         </>
       )}
-
-      <div className=""></div>
     </Modal>
   );
 };

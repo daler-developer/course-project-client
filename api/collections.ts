@@ -36,6 +36,12 @@ export const getProfileCollections = async ({ offset }: { offset: number }) => {
   );
 };
 
+export const getLargestCollections = async () => {
+  return await apiClient.get<{ collections: ICollection[] }>(
+    "/api/collections/largest"
+  );
+};
+
 export const deleteCollection = async ({
   collectionId,
 }: {

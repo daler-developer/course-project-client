@@ -21,27 +21,31 @@ const Items = ({ items, isFetching, onFetchNextPage, collection }: IProps) => {
       dataIndex: `_id`,
     });
 
-    collection.fields.text.forEach((field) => {
-      list.push({
-        key: field,
-        title: field,
-        dataIndex: `fields`,
-        render(fields: any) {
-          return <div className="">{fields.text[field]}</div>;
-        },
+    if (collection.fields.text) {
+      collection.fields.text.forEach((field) => {
+        list.push({
+          key: field,
+          title: field,
+          dataIndex: `fields`,
+          render(fields: any) {
+            return <div className="">{fields.text[field]}</div>;
+          },
+        });
       });
-    });
+    }
 
-    collection.fields.date.forEach((field) => {
-      list.push({
-        key: field,
-        title: field,
-        dataIndex: `fields`,
-        render(fields: any) {
-          return <div className="">{fields.date[field]}</div>;
-        },
+    if (collection.fields.date) {
+      collection.fields.date.forEach((field) => {
+        list.push({
+          key: field,
+          title: field,
+          dataIndex: `fields`,
+          render(fields: any) {
+            return <div className="">{fields.date[field]}</div>;
+          },
+        });
       });
-    });
+    }
 
     list.push({
       key: "menu",

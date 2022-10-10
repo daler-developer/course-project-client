@@ -1,5 +1,9 @@
 import { AxiosError } from "axios";
 
+export type ThemeType = "light" | "dark";
+
+export type LangType = "ru" | "en";
+
 export type CollectionTopicType = "animals" | "furniture" | "books";
 
 export interface IUser {
@@ -8,18 +12,29 @@ export interface IUser {
   password: string;
   isAdmin: boolean;
   isBlocked: boolean;
+  theme: ThemeType;
+  lang: LangType;
+}
+
+export interface ITag {
+  _id: string;
+  label: string;
 }
 
 export interface IItem {
   _id: string;
+  name: string;
   likes_ids: string[];
   creatorId: string;
+  creator: IUser;
+  _collection: ICollection;
+  tags: string[];
   fields: {
-    integer: { [key: string]: number };
-    date: { [key: string]: string };
-    text: { [key: string]: string };
-    multiLineText: { [key: string]: string };
-    boolean: { [key: string]: boolean };
+    integer?: { [key: string]: number };
+    date?: { [key: string]: string };
+    text?: { [key: string]: string };
+    multiLineText?: { [key: string]: string };
+    boolean?: { [key: string]: boolean };
   };
 }
 
@@ -36,6 +51,7 @@ export interface ICollection {
   desc: string;
   imageUrl?: string;
   creator: IUser;
+  numItems: number;
   creatorId: string;
   fields: {
     boolean: string[];

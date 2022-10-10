@@ -4,14 +4,20 @@ import apiClient from "../utils/apiClient";
 export const createItem = async ({
   fields,
   collectionId,
+  name,
+  tags,
 }: {
-  fields: IItem["fields"];
   collectionId: string;
+  fields: IItem["fields"];
+  name: IItem["name"];
+  tags: IItem["tags"];
 }) => {
   return await apiClient.post<{ item: IItem }>(
     `/api/collections/${collectionId}/items`,
     {
       fields,
+      name,
+      tags,
     }
   );
 };
@@ -29,6 +35,10 @@ export const getCollectionItems = async ({
       params: { offset },
     }
   );
+};
+
+export const getLatestItems = async () => {
+  return await apiClient.get<{ items: IItem[] }>(`/api/items/latest`);
 };
 
 export const getCollectionItem = async ({ itemId }: { itemId: string }) => {

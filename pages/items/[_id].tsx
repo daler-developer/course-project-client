@@ -121,73 +121,95 @@ const ItemDetail = () => {
           </>
         </div>
 
-        <Typography.Title level={2} className="mt-[20px]">
-          Text fields
-        </Typography.Title>
-        <List
-          itemLayout="horizontal"
-          dataSource={Object.entries(getItemQuery.data.fields.text)}
-          renderItem={(entry) => (
-            <List.Item>
-              <List.Item.Meta title={entry[0]} description={entry[1]} />
-            </List.Item>
-          )}
-        />
+        {getItemQuery.data.fields.text && (
+          <>
+            <Typography.Title level={2} className="mt-[20px]">
+              Text fields
+            </Typography.Title>
+            <List
+              itemLayout="horizontal"
+              dataSource={Object.entries(getItemQuery.data.fields.text)}
+              renderItem={(entry) => (
+                <List.Item>
+                  <List.Item.Meta title={entry[0]} description={entry[1]} />
+                </List.Item>
+              )}
+            />
+          </>
+        )}
 
-        <Typography.Title level={2} className="mt-[10px]">
-          Multi line text
-        </Typography.Title>
-        <List
-          itemLayout="horizontal"
-          dataSource={Object.entries(getItemQuery.data.fields.multiLineText)}
-          renderItem={(entry) => (
-            <List.Item>
-              <List.Item.Meta title={entry[0]} description={entry[1]} />
-            </List.Item>
-          )}
-        />
+        {getItemQuery.data.fields.multiLineText && (
+          <>
+            <Typography.Title level={2} className="mt-[10px]">
+              Multi line text
+            </Typography.Title>
+            <List
+              itemLayout="horizontal"
+              dataSource={Object.entries(
+                getItemQuery.data.fields.multiLineText
+              )}
+              renderItem={(entry) => (
+                <List.Item>
+                  <List.Item.Meta title={entry[0]} description={entry[1]} />
+                </List.Item>
+              )}
+            />
+          </>
+        )}
 
-        <Typography.Title level={2} className="mt-[10px]">
-          Boolean fields
-        </Typography.Title>
-        <List
-          itemLayout="horizontal"
-          dataSource={Object.entries(getItemQuery.data.fields.boolean)}
-          renderItem={(entry) => (
-            <List.Item>
-              <List.Item.Meta
-                title={entry[0]}
-                description={entry[1] ? "Yes" : "No"}
-              />
-            </List.Item>
-          )}
-        />
+        {getItemQuery.data.fields.boolean && (
+          <>
+            <Typography.Title level={2} className="mt-[10px]">
+              Boolean fields
+            </Typography.Title>
+            <List
+              itemLayout="horizontal"
+              dataSource={Object.entries(getItemQuery.data.fields.boolean)}
+              renderItem={(entry) => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={entry[0]}
+                    description={entry[1] ? "Yes" : "No"}
+                  />
+                </List.Item>
+              )}
+            />
+          </>
+        )}
 
-        <Typography.Title level={2} className="mt-[10px]">
-          Integer fields
-        </Typography.Title>
-        <List
-          itemLayout="horizontal"
-          dataSource={Object.entries(getItemQuery.data.fields.integer)}
-          renderItem={(entry) => (
-            <List.Item>
-              <List.Item.Meta title={entry[0]} description={entry[1]} />
-            </List.Item>
-          )}
-        />
+        {getItemQuery.data.fields.integer && (
+          <>
+            <Typography.Title level={2} className="mt-[10px]">
+              Integer fields
+            </Typography.Title>
+            <List
+              itemLayout="horizontal"
+              dataSource={Object.entries(getItemQuery.data.fields.integer)}
+              renderItem={(entry) => (
+                <List.Item>
+                  <List.Item.Meta title={entry[0]} description={entry[1]} />
+                </List.Item>
+              )}
+            />
+          </>
+        )}
 
-        <Typography.Title level={2} className="mt-[10px]">
-          Date fields
-        </Typography.Title>
-        <List
-          itemLayout="horizontal"
-          dataSource={Object.entries(getItemQuery.data.fields.date)}
-          renderItem={(entry) => (
-            <List.Item>
-              <List.Item.Meta title={entry[0]} description={entry[1]} />
-            </List.Item>
-          )}
-        />
+        {getItemQuery.data.fields.date && (
+          <>
+            <Typography.Title level={2} className="mt-[10px]">
+              Date fields
+            </Typography.Title>
+            <List
+              itemLayout="horizontal"
+              dataSource={Object.entries(getItemQuery.data.fields.date)}
+              renderItem={(entry) => (
+                <List.Item>
+                  <List.Item.Meta title={entry[0]} description={entry[1]} />
+                </List.Item>
+              )}
+            />
+          </>
+        )}
 
         <div className="mt-[10px]">
           <CreateCommentForm itemId={itemId} />

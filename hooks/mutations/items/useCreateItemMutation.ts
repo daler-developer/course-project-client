@@ -18,8 +18,10 @@ export default () => {
     IItem,
     AxiosErrorResponseType,
     {
-      fields: IItem["fields"];
       collectionId: string;
+      fields: IItem["fields"];
+      name: IItem["name"];
+      tags: IItem["tags"];
     }
   >(async (param) => {
     const { data } = await itemsApi.createItem(param);
