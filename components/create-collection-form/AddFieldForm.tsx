@@ -1,3 +1,4 @@
+import { CloseOutlined } from "@ant-design/icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Input, Typography } from "antd";
 import { useState } from "react";
@@ -8,6 +9,7 @@ interface IProps {
   title: string;
   fields: string[];
   onAddNewField: (field: string) => void;
+  onRemoveField: (field: string) => void;
 }
 
 interface IFormValues {
@@ -20,13 +22,19 @@ const validationSchema = yup.object({
   field: yup.string().required().min(1),
 });
 
-const AddFieldForm = ({ fields, onAddNewField, title }: IProps) => {
+const AddFieldForm = ({
+  fields,
+  onAddNewField,
+  title,
+  onRemoveField,
+}: IProps) => {
   const form = useForm<IFormValues>({
     resolver: yupResolver(validationSchema),
   });
 
   const handleSubmit = form.handleSubmit((values) => {
     onAddNewField(values.field);
+    form.reset();
   });
 
   const fieldsLimitExceeded = fields.length >= LIMIT;
@@ -37,8 +45,15 @@ const AddFieldForm = ({ fields, onAddNewField, title }: IProps) => {
 
       <div className="flex flex-col gap-[5px]">
         {fields.map((field) => (
-          <div className="bg-gray-100 p-[10px] rounded-[5px] font-[500]">
-            {field}
+          <div className="bg-gray-100 p-[10px] rounded-[5px] font-[500] flex items-center gap-[5px]">
+            <div className="flex-grow">
+              <span>{field}</span>
+            </div>
+            <Button
+              onClick={() => onRemoveField(field)}
+              icon={<CloseOutlined />}
+              danger
+            />
           </div>
         ))}
       </div>

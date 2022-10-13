@@ -2,6 +2,7 @@ import { DeleteOutlined, HeartFilled } from "@ant-design/icons";
 import { Button, List, Spin, Typography } from "antd";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import Comments from "../../components/common/comments/Comments";
 import CreateCommentForm from "../../components/item-detail/CreateCommentForm";
 import useCurrentUser from "../../hooks/common/useCurrentUser";
@@ -27,6 +28,8 @@ const ItemDetail = () => {
   const isAuthenticated = useIsAuthenticated();
 
   const currentUser = useCurrentUser();
+
+  const { t } = useTranslation();
 
   const handleDelete = () => deleteItemMutation.mutate();
   const handleLike = () => {
@@ -84,7 +87,7 @@ const ItemDetail = () => {
     return (
       <div className="">
         <Typography.Title level={1} className="text-center">
-          Item info
+          {t("titles:item-info")}
         </Typography.Title>
 
         <div className="mt-[20px] flex items-center gap-[5px]">
@@ -95,7 +98,7 @@ const ItemDetail = () => {
                 onClick={handleLike}
                 icon={<HeartFilled />}
               >
-                Like
+                {t("btns:like")}
               </Button>
             )}
             {canUnlikeItem && (
@@ -105,7 +108,7 @@ const ItemDetail = () => {
                 danger
                 icon={<HeartFilled />}
               >
-                Unlike
+                {t("btns:unlike")}
               </Button>
             )}
             {canDeleteItem && (
@@ -115,7 +118,7 @@ const ItemDetail = () => {
                 danger
                 icon={<DeleteOutlined />}
               >
-                Delete
+                {t("btns:delete")}
               </Button>
             )}
           </>
@@ -124,7 +127,7 @@ const ItemDetail = () => {
         {getItemQuery.data.fields.text && (
           <>
             <Typography.Title level={2} className="mt-[20px]">
-              Text fields
+              {t("titles:text-fields")}
             </Typography.Title>
             <List
               itemLayout="horizontal"
@@ -141,7 +144,7 @@ const ItemDetail = () => {
         {getItemQuery.data.fields.multiLineText && (
           <>
             <Typography.Title level={2} className="mt-[10px]">
-              Multi line text
+              {t("titles:multi-line-text-fields")}
             </Typography.Title>
             <List
               itemLayout="horizontal"
@@ -160,7 +163,7 @@ const ItemDetail = () => {
         {getItemQuery.data.fields.boolean && (
           <>
             <Typography.Title level={2} className="mt-[10px]">
-              Boolean fields
+              {t("titles:boolean-fields")}
             </Typography.Title>
             <List
               itemLayout="horizontal"
@@ -180,7 +183,7 @@ const ItemDetail = () => {
         {getItemQuery.data.fields.integer && (
           <>
             <Typography.Title level={2} className="mt-[10px]">
-              Integer fields
+              {t("titles:integer-fields")}
             </Typography.Title>
             <List
               itemLayout="horizontal"
@@ -197,7 +200,7 @@ const ItemDetail = () => {
         {getItemQuery.data.fields.date && (
           <>
             <Typography.Title level={2} className="mt-[10px]">
-              Date fields
+              {t("titles:date-fields")}
             </Typography.Title>
             <List
               itemLayout="horizontal"

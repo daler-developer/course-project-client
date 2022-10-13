@@ -1,10 +1,11 @@
 import NextLink from "next/link";
-import { Spin, Table, Typography } from "antd";
+import { Spin, Table, Tag, Typography } from "antd";
 import useGetLatestItemsQuery from "../hooks/queries/items/useGetLatestItemsQuery";
-import FullScreenLoader from "../components/FullScreenLoader";
 import { ICollection, IUser } from "../types";
 import useGetLargestCollectionsQuery from "../hooks/queries/collections/useGetLargestCollectionsQuery";
 import Collections from "../components/collections/Collections";
+import useGetTagsQuery from "../hooks/queries/tags/useGetTagsQuery";
+import { useTranslation } from "react-i18next";
 
 const itemsTableColumns = [
   {
@@ -31,10 +32,16 @@ const itemsTableColumns = [
 ];
 
 const Home = () => {
+  const { t } = useTranslation();
+
   const getItemsQuery = useGetLatestItemsQuery();
   const getCollectionsQuery = useGetLargestCollectionsQuery();
+  const getTagsQuery = useGetTagsQuery();
 
-  const isLoading = getItemsQuery.isLoading || getCollectionsQuery.isLoading;
+  const isLoading =
+    getItemsQuery.isLoading ||
+    getCollectionsQuery.isLoading ||
+    getTagsQuery.isLoading;
 
   if (isLoading) {
     return (
@@ -47,23 +54,32 @@ const Home = () => {
   return (
     <div className="">
       <Typography.Title className="text-[white]" level={1}>
-        Latest items
+        {t("titles:latest-items")}
       </Typography.Title>
 
-      {getItemsQuery.data && (
-        <Table
-          dataSource={getItemsQuery.allItems}
-          columns={itemsTableColumns}
-        />
-      )}
+      <Table dataSource={getItemsQuery.allItems} columns={itemsTableColumns} />
 
-      <Typography.Title level={1}>Largest collections</Typography.Title>
+      <Typography.Title level={1}>
+        {t("titles:largest-collections")}
+      </Typography.Title>
 
-      <div className="max-w-[400px] mx-auto">
+      <div className="max-w-[400px]">
         <Collections
           isInfinite={false}
           collections={getCollectionsQuery.allCollections}
         />
+      </div>
+
+      <Typography.Title className="mt-[15px]" level={1}>
+        {t("titles:tag-cloud")}
+      </Typography.Title>
+
+      <div className="mt-[10px]">
+        {getTagsQuery.allTags.map((tag) => (
+          <NextLink href={{ pathname: "/search", query: { tag: tag.label } }}>
+            <Tag className="cursor-pointer">{tag.label}</Tag>
+          </NextLink>
+        ))}
       </div>
     </div>
   );

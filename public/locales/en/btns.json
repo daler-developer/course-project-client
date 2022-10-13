@@ -1,0 +1,17 @@
+{
+  "create": "Create",
+  "block": "Block",
+  "unblock": "Unblock",
+  "add": "Добавить",
+  "add-to-admins": "Add to admins",
+  "remove-from-admins": "Remove from admins",
+  "delete": "Delete",
+  "light": "Light",
+  "dark": "Dark",
+  "create-new-item": "Create new item",
+  "like": "Like",
+  "unlike": "Unlike",
+  "logout": "Logout",
+  "new": "New",
+  "cancel": "Cancel"
+}

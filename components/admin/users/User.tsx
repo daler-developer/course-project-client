@@ -1,4 +1,5 @@
 import { Button } from "antd";
+import { useTranslation } from "react-i18next";
 import useAddUserToAdmins from "../../../hooks/mutations/users/useAddUserToAdmins";
 import useBlockUserMutation from "../../../hooks/mutations/users/useBlockUserMutation";
 import useDeleteUserMutation from "../../../hooks/mutations/users/useDeleteUserMutation";
@@ -11,6 +12,8 @@ interface IProps {
 }
 
 const User = ({ user }: IProps) => {
+  const { t } = useTranslation();
+
   const blockUserMutation = useBlockUserMutation(user._id);
   const unblockUserMutation = useUnblockUserMutation(user._id);
   const deleteUserMutation = useDeleteUserMutation(user._id);
@@ -34,7 +37,7 @@ const User = ({ user }: IProps) => {
             onClick={handleUnblock}
             type="primary"
           >
-            Unblock
+            {t("btns:unblock")}
           </Button>
         ) : (
           <Button
@@ -43,7 +46,7 @@ const User = ({ user }: IProps) => {
             type="primary"
             danger
           >
-            Block
+            {t("btns:block")}
           </Button>
         )}
         {user.isAdmin ? (
@@ -52,7 +55,7 @@ const User = ({ user }: IProps) => {
             type="primary"
             onClick={handleRemoveFromAdmins}
           >
-            Remove from admins
+            {t("btns:remove-from-admins")}
           </Button>
         ) : (
           <Button
@@ -60,11 +63,11 @@ const User = ({ user }: IProps) => {
             type="primary"
             onClick={handleAddToAdmins}
           >
-            Add to admins
+            {t("btns:add-to-admins")}
           </Button>
         )}
         <Button onClick={handleDelete} type="primary" danger>
-          Delete
+          {t("btns:delete")}
         </Button>
       </div>
     </div>

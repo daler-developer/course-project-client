@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Input } from "antd";
 import useCreateCommentMutation from "../../hooks/mutations/comments/useCreateCommentMutation";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   itemId: string;
@@ -17,13 +18,15 @@ const schema = yup.object({
 });
 
 const CreateCommentForm = ({ itemId }: IProps) => {
+  const { t } = useTranslation();
+
   const createCommentMutation = useCreateCommentMutation({ itemId });
 
   const form = useForm<IFormValues>({ resolver: yupResolver(schema) });
 
   const handleSubmit = form.handleSubmit((values) => {
     createCommentMutation.mutate(
-      { itemId, text: values.text },
+      { text: values.text },
       {
         onSettled() {
           form.reset();
@@ -40,14 +43,14 @@ const CreateCommentForm = ({ itemId }: IProps) => {
         render={({ field }) => (
           <Input
             className="flex-grow"
-            placeholder="Comment"
+            placeholder={t("common:comment")}
             {...(form.formState.errors.text && { status: "error" })}
             {...field}
           />
         )}
       />
       <Button loading={createCommentMutation.isLoading} htmlType="submit">
-        Create
+        {t("btns:create")}
       </Button>
     </form>
   );

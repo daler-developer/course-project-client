@@ -6,6 +6,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import queryClient from "../utils/queryClient";
 import App from "../components/App";
+import { appWithI18Next } from "ni18n";
+import { ni18nConfig } from "../ni18n.config";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -21,4 +23,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default appWithI18Next(MyApp, ni18nConfig);

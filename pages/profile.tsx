@@ -3,20 +3,23 @@ import { useRouter } from "next/router";
 import NextLink from "next/link";
 import useGetProfileCollectionsQuery from "../hooks/queries/collections/useGetProfileCollectionsQuery";
 import Collections from "../components/collections/Collections";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
+  const { t } = useTranslation();
+
   const getCollectionsQuery = useGetProfileCollectionsQuery();
 
   return (
     <div className="">
       <Typography.Title level={1} className="text-center">
-        You collections
+        {t("titles:your-collections")}
       </Typography.Title>
 
       <div className="mt-[10px] mx-auto max-w-[500px]">
         <NextLink href="/create-collection" passHref>
           <Button block type="primary">
-            New
+            {t("btns:new")}
           </Button>
         </NextLink>
 

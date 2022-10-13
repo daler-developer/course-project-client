@@ -1,0 +1,14 @@
+{
+  "latest-items": "Latest items",
+  "largest-collections": "Largest collections",
+  "tag-cloud": "Tag cloud",
+  "create-item": "Create item",
+  "your-collections": "Your collections",
+  "items": "Items",
+  "item-info": "Item info",
+  "text-fields": "Text fields",
+  "multi-line-text-fields": "Multi line text fields",
+  "boolean-fields": "Boolean fields",
+  "integer-fields": "Integer fields",
+  "date-fields": "Date fields"
+}

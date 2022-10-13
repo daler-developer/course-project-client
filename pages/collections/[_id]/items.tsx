@@ -7,12 +7,15 @@ import CreateItemModal from "../../../components/modals/CreateItemModal";
 import useGetCollectionQuery from "../../../hooks/queries/collections/useGetCollectionQuery";
 import useGetCollectionItemQuery from "../../../hooks/queries/items/useGetCollectionItemQuery";
 import NextLink from "next/link";
+import { useTranslation } from "react-i18next";
 
 const CollectionDetail = () => {
   const [isCreateItemModalVisible, setIsCreateItemModalVisible] =
     useState(false);
 
   const router = useRouter();
+
+  const { t } = useTranslation();
 
   const getCollectionQuery = useGetCollectionQuery({
     collectionId: router.query._id as string,
@@ -30,14 +33,14 @@ const CollectionDetail = () => {
       ) : (
         <>
           <Typography.Title level={1} className="text-center">
-            Items
+            {t("titles:items")}
           </Typography.Title>
           <Button
             block
             onClick={() => setIsCreateItemModalVisible(true)}
             type="primary"
           >
-            Creat new item
+            {t("btns:new")}
           </Button>
           {getCollectionItemsQuery.isSuccess && (
             <div className="mt-[10px]">

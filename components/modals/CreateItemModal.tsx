@@ -15,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import useCreateItemMutation from "../../hooks/mutations/items/useCreateItemMutation";
 import { ChangeEvent, useEffect, useState } from "react";
 import TagInput from "../create-item-form/TagInput";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   isVisible: boolean;
@@ -36,6 +37,8 @@ interface IFormValues {
 
 const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
   const createItemMutation = useCreateItemMutation();
+
+  const { t } = useTranslation();
 
   const getIntegerSchema = () => {
     const schema: any = {};
@@ -117,20 +120,19 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
   };
 
   const handleSubmit = form.handleSubmit((values) => {
-    console.log(values);
-    // createItemMutation.mutate(
-    //   {
-    //     collectionId: collection._id,
-    //     fields: values.fields,
-    //     name: values.name,
-    //     tags: values.tags,
-    //   },
-    //   {
-    //     onSettled() {
-    //       form.reset();
-    //     },
-    //   }
-    // );
+    createItemMutation.mutate(
+      {
+        collectionId: collection._id,
+        fields: values.fields,
+        name: values.name,
+        tags: values.tags,
+      },
+      {
+        onSettled() {
+          form.reset();
+        },
+      }
+    );
   });
 
   const isTagSelected = (tag: string) => {
@@ -151,7 +153,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
 
   return (
     <Modal
-      title="Create item"
+      title={t("titles:create-item")}
       open={isVisible}
       onCancel={() => onClose()}
       footer={[
@@ -161,10 +163,10 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
           loading={createItemMutation.isLoading}
           onClick={handleSubmit}
         >
-          Create
+          {t("btns:create")}
         </Button>,
         <Button key="cancel-btn" htmlType="button" onClick={() => onClose()}>
-          Cancel
+          {t("btns:cancel")}
         </Button>,
       ]}
     >
@@ -198,7 +200,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
       {hasTextFields && (
         <>
           <Typography.Text className="block mt-[15px] font-[500] text-[18px]">
-            Text fields
+            {t("titles:text-fields")}
           </Typography.Text>
           {collection.fields.text.map((fieldName) => (
             <>
@@ -225,7 +227,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
       {hasBooleanFields && (
         <>
           <Typography.Text className="block mt-[15px] font-[500] text-[18px]">
-            Boolean fields
+            {t("titles:boolean-fields")}
           </Typography.Text>
           {collection.fields.boolean.map((fieldName) => (
             <>
@@ -247,7 +249,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
       {hasIntegerFields && (
         <>
           <Typography.Text className="block mt-[15px] font-[500] text-[18px]">
-            Integer fields
+            {t("titles:integer-fields")}
           </Typography.Text>
           {collection.fields.integer.map((fieldName) => (
             <>
@@ -276,7 +278,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
       {hasMultiLineTextFields && (
         <>
           <Typography.Text className="block mt-[15px] font-[500] text-[18px]">
-            Multi line text fields
+            {t("titles:multi-line-text-fields")}
           </Typography.Text>
           {collection.fields.multiLineText.map((fieldName) => (
             <>
@@ -307,7 +309,7 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
       {hasDateFields && (
         <>
           <Typography.Text className="block mt-[15px] font-[500] text-[18px]">
-            Date fields
+            {t("titles:date-fields")}
           </Typography.Text>
           {collection.fields.date.map((fieldName) => (
             <>

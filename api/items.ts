@@ -37,6 +37,20 @@ export const getCollectionItems = async ({
   );
 };
 
+export const searchItems = async ({
+  offset,
+  tag,
+  search,
+}: {
+  offset: number;
+  tag?: string;
+  search?: string;
+}) => {
+  return await apiClient.get<{ items: IItem[] }>(`/api/items/search`, {
+    params: { offset, tag, search },
+  });
+};
+
 export const getLatestItems = async () => {
   return await apiClient.get<{ items: IItem[] }>(`/api/items/latest`);
 };

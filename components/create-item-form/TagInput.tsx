@@ -1,5 +1,6 @@
 import { AutoComplete, Button, Input } from "antd";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import * as yup from "yup";
 import useSearchTagsQuery from "../../hooks/queries/tags/useSearchTagsQuery";
 
@@ -14,10 +15,15 @@ const TagInput = ({ onAddTag }: IProps) => {
 
   const tagsQuery = useSearchTagsQuery({ search: inputValue });
 
+  const { t } = useTranslation();
+
   const handleClick = () => {
-    const validatedValue = tagSchema.validateSync(inputValue);
-    onAddTag(validatedValue);
-    setInputValue("");
+    try {
+      const validatedValue = tagSchema.validateSync(inputValue);
+      onAddTag(validatedValue);
+      setInputValue("");
+    } finally {
+    }
   };
 
   const options = tagsQuery.allTags;
@@ -32,7 +38,7 @@ const TagInput = ({ onAddTag }: IProps) => {
         onChange={(v) => setInputValue(v)}
       />
       <Button htmlType="button" onClick={handleClick}>
-        Add
+        {t("btns:add")}
       </Button>
     </div>
   );

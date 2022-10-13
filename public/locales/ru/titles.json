@@ -1,0 +1,14 @@
+{
+  "latest-items": "Последние итемы",
+  "largest-collections": "Самые большие колл.",
+  "tag-cloud": "Теги",
+  "create-item": "Создать итем",
+  "your-collections": "Выши коллекции",
+  "items": "Итемы",
+  "item-info": "Инфор. об итеми",
+  "text-fields": "Тектовые поля",
+  "multi-line-text-fields": "Многострочные текстоые поля",
+  "boolean-fields": "Булевые поля",
+  "integer-fields": "Числовые поля",
+  "date-fields": "Даты"
+}

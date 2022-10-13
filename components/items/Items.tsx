@@ -3,6 +3,7 @@ import { Button, Dropdown, Menu, Spin, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { ICollection, IItem } from "../../types";
 import NextLink from "next/link";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   collection: ICollection;
@@ -12,6 +13,8 @@ interface IProps {
 }
 
 const Items = ({ items, isFetching, onFetchNextPage, collection }: IProps) => {
+  const { t } = useTranslation();
+
   const columns = (() => {
     const list: ColumnsType<object> = [];
 
@@ -55,7 +58,7 @@ const Items = ({ items, isFetching, onFetchNextPage, collection }: IProps) => {
         return (
           <NextLink href={`/items/${_id}`} passHref>
             <Button type="link" size="small">
-              Open
+              {t("links:open")}
             </Button>
           </NextLink>
         );
@@ -66,7 +69,7 @@ const Items = ({ items, isFetching, onFetchNextPage, collection }: IProps) => {
   })();
 
   return (
-    <div className="">
+    <div className="overflow-x-auto">
       <Table columns={columns} dataSource={items} />
 
       {isFetching ? (

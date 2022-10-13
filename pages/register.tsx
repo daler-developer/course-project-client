@@ -64,7 +64,7 @@ const Register = () => {
             <Input
               style={{ marginTop: "5px" }}
               placeholder="Password"
-              type="register"
+              type="password"
               {...(form.formState.errors.password && { status: "error" })}
               {...field}
             />

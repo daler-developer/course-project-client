@@ -74,4 +74,10 @@
 			"export default $TM_FILENAME_BASE",
 		]
 	},
+	"t": {
+		"prefix": "t",
+		"body": [
+			"{t('$0')}",
+		]
+	}
 }
