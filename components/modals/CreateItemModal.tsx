@@ -16,27 +16,39 @@ import useCreateItemMutation from "../../hooks/mutations/items/useCreateItemMuta
 import { ChangeEvent, useEffect, useState } from "react";
 import TagInput from "../create-item-form/TagInput";
 import { useTranslation } from "react-i18next";
+import useEditItemMutation from "../../hooks/mutations/items/useEditItemMutation";
 
 interface IProps {
   isVisible: boolean;
   collection: ICollection;
   onClose: () => void;
+  shouldEdit?: boolean;
+  initialValues?: IFormValues;
+  itemIdToEdit?: string;
 }
 
 interface IFormValues {
   name: string;
   tags: string[];
   fields: {
-    integer: { [key: string]: number };
-    date: { [key: string]: string };
-    text: { [key: string]: string };
-    multiLineText: { [key: string]: string };
-    boolean: { [key: string]: boolean };
+    integer?: { [key: string]: number };
+    date?: { [key: string]: string };
+    text?: { [key: string]: string };
+    multiLineText?: { [key: string]: string };
+    boolean?: { [key: string]: boolean };
   };
 }
 
-const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
+const CreateItemModal = ({
+  isVisible,
+  collection,
+  onClose,
+  shouldEdit = false,
+  initialValues,
+  itemIdToEdit,
+}: IProps) => {
   const createItemMutation = useCreateItemMutation();
+  const editItemMutation = useEditItemMutation({ itemId: itemIdToEdit });
 
   const { t } = useTranslation();
 
@@ -104,9 +116,13 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
         }),
       })
     ),
-    defaultValues: {
-      tags: [],
-    },
+    defaultValues: shouldEdit
+      ? initialValues
+      : {
+          tags: [],
+          name: "",
+          fields: {},
+        },
   });
 
   useWatch({ control: form.control, name: "tags" });
@@ -120,29 +136,33 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
   };
 
   const handleSubmit = form.handleSubmit((values) => {
-    createItemMutation.mutate(
-      {
-        collectionId: collection._id,
-        fields: values.fields,
-        name: values.name,
-        tags: values.tags,
-      },
-      {
+    if (shouldEdit) {
+      editItemMutation.mutate(values, {
         onSettled() {
           form.reset();
         },
-      }
-    );
+      });
+    } else {
+      createItemMutation.mutate(
+        {
+          collectionId: collection._id,
+          ...values,
+        },
+        {
+          onSettled() {
+            form.reset();
+          },
+        }
+      );
+    }
   });
 
-  const isTagSelected = (tag: string) => {
-    return form.getValues("tags").includes(tag);
+  const handleAddNewTag = (newTag: string) => {
+    form.setValue("tags", [...form.getValues("tags"), newTag]);
   };
 
-  const handleAddNewTag = (newTag: string) => {
-    if (!isTagSelected(newTag)) {
-      form.setValue("tags", [...form.getValues("tags"), newTag]);
-    }
+  const handleRemoveTag = (tag: string) => {
+    form.setValue("tags", [...form.getValues("tags").filter((t) => t !== tag)]);
   };
 
   const hasTextFields = !!collection.fields.text.length;
@@ -153,17 +173,17 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
 
   return (
     <Modal
-      title={t("titles:create-item")}
+      title={shouldEdit ? t('titles:edit-item') : t("titles:create-item")}
       open={isVisible}
       onCancel={() => onClose()}
       footer={[
         <Button
           key="submitBtn"
           htmlType="submit"
-          loading={createItemMutation.isLoading}
+          loading={shouldEdit ? editItemMutation.isLoading :  createItemMutation.isLoading}
           onClick={handleSubmit}
         >
-          {t("btns:create")}
+          {shouldEdit ? t('btns:edit') :  t("btns:create")}
         </Button>,
         <Button key="cancel-btn" htmlType="button" onClick={() => onClose()}>
           {t("btns:cancel")}
@@ -186,16 +206,12 @@ const CreateItemModal = ({ isVisible, collection, onClose }: IProps) => {
       />
 
       <div className="mt-[5px]">
-        <TagInput onAddTag={handleAddNewTag} />
+        <TagInput
+          onAddTag={handleAddNewTag}
+          onRemoveTag={handleRemoveTag}
+          tags={form.getValues("tags")}
+        />
       </div>
-
-      {!!form.getValues("tags").length && (
-        <div className="mt-[10px]">
-          {form.getValues("tags").map((tag) => (
-            <Tag>{tag}</Tag>
-          ))}
-        </div>
-      )}
 
       {hasTextFields && (
         <>

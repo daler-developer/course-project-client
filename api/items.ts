@@ -22,6 +22,24 @@ export const createItem = async ({
   );
 };
 
+export const editItem = async ({
+  itemId,
+  fields,
+  name,
+  tags,
+}: {
+  itemId: string;
+  fields: IItem["fields"];
+  name: IItem["name"];
+  tags: IItem["tags"];
+}) => {
+  return await apiClient.patch<{ item: IItem }>(`/api/items/${itemId}`, {
+    fields,
+    name,
+    tags,
+  });
+};
+
 export const getCollectionItems = async ({
   offset,
   collectionId,

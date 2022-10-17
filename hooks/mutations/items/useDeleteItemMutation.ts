@@ -17,8 +17,6 @@ import { useRouter } from "next/router";
 export default ({ itemId }: { itemId: string }) => {
   const queryClient = useQueryClient();
 
-  const router = useRouter();
-
   const mutation = useMutation<void, AxiosErrorResponseType>(
     async () => {
       await itemsApi.deleteItem({ itemId });
@@ -40,8 +38,6 @@ export default ({ itemId }: { itemId: string }) => {
             }
           }
         );
-
-        router.back();
       },
     }
   );

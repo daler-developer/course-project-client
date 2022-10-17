@@ -8,9 +8,12 @@ import useGetCollectionQuery from "../../../hooks/queries/collections/useGetColl
 import useGetCollectionItemQuery from "../../../hooks/queries/items/useGetCollectionItemQuery";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
+import EditCollectionModal from "../../../components/modals/EditCollectionModal";
 
 const CollectionDetail = () => {
   const [isCreateItemModalVisible, setIsCreateItemModalVisible] =
+    useState(false);
+  const [isEditCollectionModalOpen, setIsEditCollectionModalOpen] =
     useState(false);
 
   const router = useRouter();
@@ -37,27 +40,43 @@ const CollectionDetail = () => {
           </Typography.Title>
           <Button
             block
+            onClick={() => setIsEditCollectionModalOpen(true)}
+            type="primary"
+          >
+            {t("btns:Edit")}
+          </Button>
+          <Button
+            className="mt-[5px]"
+            block
             onClick={() => setIsCreateItemModalVisible(true)}
             type="primary"
           >
             {t("btns:new")}
           </Button>
-          {getCollectionItemsQuery.isSuccess && (
-            <div className="mt-[10px]">
-              <Items
+          {getCollectionItemsQuery.data && (
+            <>
+              <div className="mt-[10px]">
+                <Items
+                  collection={getCollectionQuery.data!}
+                  items={getCollectionItemsQuery.allItems}
+                  isFetching={getCollectionItemsQuery.isFetching}
+                  onFetchNextPage={() =>
+                    getCollectionItemsQuery.fetchNextPage()
+                  }
+                />
+              </div>
+              <CreateItemModal
+                isVisible={isCreateItemModalVisible}
                 collection={getCollectionQuery.data!}
-                items={getCollectionItemsQuery.allItems}
-                isFetching={getCollectionItemsQuery.isFetching}
-                onFetchNextPage={() => getCollectionItemsQuery.fetchNextPage()}
+                onClose={() => setIsCreateItemModalVisible(false)}
               />
-            </div>
+              <EditCollectionModal
+                isOpen={isEditCollectionModalOpen}
+                onClose={() => setIsEditCollectionModalOpen(false)}
+                collection={getCollectionQuery.data!}
+              />
+            </>
           )}
-
-          <CreateItemModal
-            isVisible={isCreateItemModalVisible}
-            collection={getCollectionQuery.data!}
-            onClose={() => setIsCreateItemModalVisible(false)}
-          />
         </>
       )}
     </div>

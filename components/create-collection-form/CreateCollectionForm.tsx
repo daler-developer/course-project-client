@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import * as yup from "yup";
 import { Button, Input, Select, Typography } from "antd";
 import { useWatch } from "react-hook-form";
-import { ChangeEvent, useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import AddFieldForm from "./AddFieldForm";
 import {
   ConsoleSqlOutlined,
@@ -13,10 +13,11 @@ import {
 } from "@ant-design/icons";
 import useCreateCollectionMutation from "../../hooks/mutations/collections/useCreateCollectionMutation";
 import { CreateCollectionDto } from "../../types";
+import axios from "axios";
 
 interface IProps {
   initialValues?: CreateCollectionDto;
-  editMode?: boolean;
+  shouldEdit?: boolean;
 }
 
 const validationSchema = yup.object({
@@ -24,24 +25,29 @@ const validationSchema = yup.object({
   name: yup.string().required().min(1).max(150),
 });
 
-const CreateCollectionForm = ({ initialValues, editMode = false }: IProps) => {
+const CreateCollectionForm = ({
+  initialValues,
+  shouldEdit = false,
+}: IProps) => {
   const createCollectionMutation = useCreateCollectionMutation();
 
   const form = useForm<CreateCollectionDto>({
     resolver: yupResolver(validationSchema),
-    defaultValues: initialValues || {
-      desc: "",
-      name: "",
-      topic: "animals",
-      fields: {
-        integer: [],
-        date: [],
-        text: [],
-        multiLineText: [],
-        boolean: [],
-      },
-      image: null,
-    },
+    defaultValues: shouldEdit
+      ? initialValues!
+      : {
+          desc: "",
+          name: "",
+          topic: "animals",
+          fields: {
+            integer: [],
+            date: [],
+            text: [],
+            multiLineText: [],
+            boolean: [],
+          },
+          image: null,
+        },
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null!);
@@ -66,7 +72,6 @@ const CreateCollectionForm = ({ initialValues, editMode = false }: IProps) => {
   useWatch({ name: "image", control: form.control });
 
   const handleSubmit = form.handleSubmit((values) => {
-    // alert("test");
     createCollectionMutation.mutate(values, {
       onSettled() {
         form.reset();
@@ -74,7 +79,7 @@ const CreateCollectionForm = ({ initialValues, editMode = false }: IProps) => {
     });
   });
 
-  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     form.setValue("image", e.currentTarget.files![0] || null);
   };
 

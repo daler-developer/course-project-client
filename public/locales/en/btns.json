@@ -1,6 +1,7 @@
 {
   "create": "Create",
   "block": "Block",
+  "edit": "Edit",
   "unblock": "Unblock",
   "add": "Добавить",
   "add-to-admins": "Add to admins",
