@@ -11,5 +11,6 @@
   "multi-line-text-fields": "Многострочные текстоые поля",
   "boolean-fields": "Булевые поля",
   "integer-fields": "Числовые поля",
-  "date-fields": "Даты"
+  "date-fields": "Даты",
+  "create-collection": "Создать коллекцию"
 }

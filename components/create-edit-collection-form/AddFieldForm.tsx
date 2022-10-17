@@ -45,7 +45,10 @@ const AddFieldForm = ({
 
       <div className="flex flex-col gap-[5px]">
         {fields.map((field) => (
-          <div className="bg-gray-100 p-[10px] rounded-[5px] font-[500] flex items-center gap-[5px]">
+          <div
+            key={field}
+            className="bg-gray-100 p-[10px] rounded-[5px] font-[500] flex items-center gap-[5px]"
+          >
             <div className="flex-grow">
               <span>{field}</span>
             </div>

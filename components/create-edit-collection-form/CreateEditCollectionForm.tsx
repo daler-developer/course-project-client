@@ -14,10 +14,21 @@ import {
 import useCreateCollectionMutation from "../../hooks/mutations/collections/useCreateCollectionMutation";
 import { CreateCollectionDto } from "../../types";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+import useEditCollectionMutation from "../../hooks/mutations/collections/useEditCollectionMutation";
 
-interface IProps {
-  initialValues?: CreateCollectionDto;
-  shouldEdit?: boolean;
+interface ICommonProps {}
+
+interface IEditModeProps extends ICommonProps {
+  mode: "edit";
+  collectionId: string;
+  initialValues: CreateCollectionDto;
+}
+
+interface ICreateModeProps extends ICommonProps {
+  mode: "create";
+  initialValues: null;
+  collectionId: null;
 }
 
 const validationSchema = yup.object({
@@ -25,29 +36,34 @@ const validationSchema = yup.object({
   name: yup.string().required().min(1).max(150),
 });
 
-const CreateCollectionForm = ({
+const CreateEditCollectionForm = ({
   initialValues,
-  shouldEdit = false,
-}: IProps) => {
+  mode,
+  collectionId,
+}: IEditModeProps | ICreateModeProps) => {
   const createCollectionMutation = useCreateCollectionMutation();
+  const editCollectionMutation = useEditCollectionMutation();
+
+  const { t } = useTranslation();
 
   const form = useForm<CreateCollectionDto>({
     resolver: yupResolver(validationSchema),
-    defaultValues: shouldEdit
-      ? initialValues!
-      : {
-          desc: "",
-          name: "",
-          topic: "animals",
-          fields: {
-            integer: [],
-            date: [],
-            text: [],
-            multiLineText: [],
-            boolean: [],
+    defaultValues:
+      mode === "edit"
+        ? initialValues!
+        : {
+            desc: "",
+            name: "",
+            topic: "animals",
+            fields: {
+              integer: [],
+              date: [],
+              text: [],
+              multiLineText: [],
+              boolean: [],
+            },
+            image: null,
           },
-          image: null,
-        },
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null!);
@@ -72,11 +88,15 @@ const CreateCollectionForm = ({
   useWatch({ name: "image", control: form.control });
 
   const handleSubmit = form.handleSubmit((values) => {
-    createCollectionMutation.mutate(values, {
-      onSettled() {
-        form.reset();
-      },
-    });
+    // console.log(values);
+    if (mode === "edit") {
+      editCollectionMutation.mutate({ ...values, collectionId });
+    }
+    // createCollectionMutation.mutate(values, {
+    //   onSettled() {
+    //     form.reset();
+    //   },
+    // });
   });
 
   const handleFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -95,11 +115,11 @@ const CreateCollectionForm = ({
   const formSubmitBtnRef = useRef<HTMLButtonElement>(null!);
 
   return (
-    <div className="">
+    <div>
       <form onSubmit={handleSubmit}>
         <button type="submit" hidden ref={formSubmitBtnRef}></button>
         <Typography.Title level={1} className="text-center">
-          Create collection
+          {t("titles:create-collection")}
         </Typography.Title>
         <Controller
           name="name"
@@ -156,7 +176,7 @@ const CreateCollectionForm = ({
             onClick={() => fileInputRef.current.click()}
             htmlType="button"
           >
-            Upload image
+            {t("btns:upload-img")}
           </Button>
         )}
         <input
@@ -170,7 +190,7 @@ const CreateCollectionForm = ({
       <ReactMarkdown>{form.getValues("desc")}</ReactMarkdown>
 
       <Typography.Title level={4} className="mt-[10px]">
-        Arbitray values
+        {t("common:arbitrary-fields")}
       </Typography.Title>
 
       <div className="mt-[5px]">
@@ -276,10 +296,10 @@ const CreateCollectionForm = ({
         loading={createCollectionMutation.isLoading}
         onClick={() => formSubmitBtnRef.current.click()}
       >
-        Create
+        {mode === "create" ? t("btns:create") : t("btns:edit")}
       </Button>
     </div>
   );
 };
 
-export default CreateCollectionForm;
+export default CreateEditCollectionForm;

@@ -25,6 +25,32 @@ export const createCollections = async ({
   );
 };
 
+export const editCollection = async ({
+  desc,
+  fields,
+  name,
+  topic,
+  image,
+  collectionId,
+}: CreateCollectionDto & { collectionId: string }) => {
+  const form = new FormData();
+
+  form.append("collectionId", collectionId);
+  form.append("name", name);
+  form.append("topic", topic);
+  form.append("desc", desc);
+  form.append("fields", JSON.stringify(fields));
+
+  if (image) {
+    form.append("image", image);
+  }
+
+  return await apiClient.patch<{ collection: ICollection }>(
+    `/api/collections/${collectionId}`,
+    form
+  );
+};
+
 export const getProfileCollections = async ({ offset }: { offset: number }) => {
   return await apiClient.get<{ collections: ICollection[] }>(
     "/api/profile/collections",

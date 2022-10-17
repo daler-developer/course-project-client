@@ -1,11 +1,11 @@
-import CreateCollectionForm from "../components/create-collection-form/CreateCollectionForm";
+import CreateEditCollectionForm from "../components/create-edit-collection-form/CreateEditCollectionForm";
 
 interface IProps {}
 
 const CreateCollectionPage = ({}: IProps) => {
   return (
     <div className="max-w-[500px] mx-auto">
-      <CreateCollectionForm editMode={false} />
+      <CreateEditCollectionForm mode="create" initialValues={null} />
     </div>
   );
 };

@@ -11,32 +11,30 @@ import {
   IItem,
   IUser,
 } from "../../../types";
-import * as itemsApi from "../../../api/items";
+import * as collectionsApi from "../../../api/collections";
 import useCurrentUser from "../../common/useCurrentUser";
 
 export default () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<
-    IItem,
+    ICollection,
     AxiosErrorResponseType,
-    {
-      fields: IItem["fields"];
-      name: IItem["name"];
-      tags: IItem["tags"];
-      itemId: IItem["_id"];
+    Pick<ICollection, "name" | "desc" | "fields" | "topic"> & {
+      image: File | null;
+      collectionId: string;
     }
   >(
     async (param) => {
-      const { data } = await itemsApi.editItem({ ...param });
+      const { data } = await collectionsApi.editCollection(param);
 
-      return data.item;
+      return data.collection;
     },
     {
       onSuccess(updatedItem) {
         queryClient.setQueriesData(
-          ["items", "detail", updatedItem._id],
-          (oldItem?: IItem) => {
+          ["collections", "detail", updatedItem._id],
+          (oldItem?: ICollection) => {
             if (oldItem) {
               return updatedItem;
             }
@@ -44,8 +42,8 @@ export default () => {
         );
 
         queryClient.setQueriesData(
-          ["items", "list"],
-          (oldData?: InfiniteData<IItem[]>) => {
+          ["collections", "list"],
+          (oldData?: InfiniteData<ICollection[]>) => {
             if (oldData) {
               const newPages = oldData.pages.map((page) =>
                 page.map((item) => {

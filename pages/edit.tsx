@@ -1,24 +1,9 @@
 import axios from "axios";
 import { useEffect } from "react";
-import CreateCollectionForm from "../components/create-collection-form/CreateCollectionForm";
+import CreateEditCollectionForm from "../components/create-edit-collection-form/CreateEditCollectionForm";
 
 const Edit = () => {
-  useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        "http://res.cloudinary.com/dcupjdnqe/image/upload/v1665584710/rhghtnnbhwawlsztccky.jpg",
-        {
-          responseType: "blob",
-        }
-      );
-    })();
-  }, []);
-
-  return (
-    <div className="">
-      <CreateCollectionForm />
-    </div>
-  );
+  return <div className="">{/* <CreateEditCollectionForm /> */}</div>;
 };
 
 export default Edit;

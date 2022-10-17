@@ -11,5 +11,6 @@
   "multi-line-text-fields": "Multi line text fields",
   "boolean-fields": "Boolean fields",
   "integer-fields": "Integer fields",
-  "date-fields": "Date fields"
+  "date-fields": "Date fields",
+  "create-collection": "Create collection"
 }

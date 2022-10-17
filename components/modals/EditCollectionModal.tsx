@@ -2,7 +2,7 @@ import { Button, Modal, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ICollection } from "../../types";
-import CreateCollectionForm from "../create-collection-form/CreateCollectionForm";
+import CreateEditCollectionForm from "../create-edit-collection-form/CreateEditCollectionForm";
 
 interface IProps {
   isOpen: boolean;
@@ -39,14 +39,6 @@ const EditCollectionModal = ({ isOpen, onClose, collection }: IProps) => {
       open={isOpen}
       onCancel={() => onClose()}
       footer={[
-        <Button
-          key="submitBtn"
-          htmlType="submit"
-          loading={false}
-          onClick={() => {}}
-        >
-          Edit
-        </Button>,
         <Button key="cancel-btn" htmlType="button" onClick={() => onClose()}>
           {t("btns:cancel")}
         </Button>,
@@ -55,8 +47,9 @@ const EditCollectionModal = ({ isOpen, onClose, collection }: IProps) => {
       {isLoading ? (
         <Spin />
       ) : (
-        <CreateCollectionForm
-          shouldEdit
+        <CreateEditCollectionForm
+          collectionId={collection._id}
+          mode="edit"
           initialValues={{
             desc: collection.desc,
             fields: collection.fields,

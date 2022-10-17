@@ -48,7 +48,7 @@ const CreateItemModal = ({
   itemIdToEdit,
 }: IProps) => {
   const createItemMutation = useCreateItemMutation();
-  const editItemMutation = useEditItemMutation({ itemId: itemIdToEdit });
+  const editItemMutation = useEditItemMutation();
 
   const { t } = useTranslation();
 
@@ -137,11 +137,14 @@ const CreateItemModal = ({
 
   const handleSubmit = form.handleSubmit((values) => {
     if (shouldEdit) {
-      editItemMutation.mutate(values, {
-        onSettled() {
-          form.reset();
-        },
-      });
+      editItemMutation.mutate(
+        { ...values, itemId: itemIdToEdit! },
+        {
+          onSettled() {
+            form.reset();
+          },
+        }
+      );
     } else {
       createItemMutation.mutate(
         {
@@ -173,17 +176,21 @@ const CreateItemModal = ({
 
   return (
     <Modal
-      title={shouldEdit ? t('titles:edit-item') : t("titles:create-item")}
+      title={shouldEdit ? t("titles:edit-item") : t("titles:create-item")}
       open={isVisible}
       onCancel={() => onClose()}
       footer={[
         <Button
           key="submitBtn"
           htmlType="submit"
-          loading={shouldEdit ? editItemMutation.isLoading :  createItemMutation.isLoading}
+          loading={
+            shouldEdit
+              ? editItemMutation.isLoading
+              : createItemMutation.isLoading
+          }
           onClick={handleSubmit}
         >
-          {shouldEdit ? t('btns:edit') :  t("btns:create")}
+          {shouldEdit ? t("btns:edit") : t("btns:create")}
         </Button>,
         <Button key="cancel-btn" htmlType="button" onClick={() => onClose()}>
           {t("btns:cancel")}
@@ -219,7 +226,7 @@ const CreateItemModal = ({
             {t("titles:text-fields")}
           </Typography.Text>
           {collection.fields.text.map((fieldName) => (
-            <>
+            <div key={fieldName}>
               <Typography.Text>{fieldName}</Typography.Text>
               <Controller
                 name={`fields.text.${fieldName}`}
@@ -235,7 +242,7 @@ const CreateItemModal = ({
                   />
                 )}
               />
-            </>
+            </div>
           ))}
         </>
       )}
@@ -247,7 +254,7 @@ const CreateItemModal = ({
           </Typography.Text>
           {collection.fields.boolean.map((fieldName) => (
             <>
-              <div className="flex items-center gap-[5px]">
+              <div key={fieldName} className="flex items-center gap-[5px]">
                 <Controller
                   name={`fields.boolean.${fieldName}`}
                   control={form.control}
@@ -269,7 +276,7 @@ const CreateItemModal = ({
           </Typography.Text>
           {collection.fields.integer.map((fieldName) => (
             <>
-              <div className="">
+              <div key={fieldName}>
                 <Typography.Text>{fieldName}</Typography.Text>
                 <Controller
                   name={`fields.integer.${fieldName}`}
@@ -298,7 +305,7 @@ const CreateItemModal = ({
           </Typography.Text>
           {collection.fields.multiLineText.map((fieldName) => (
             <>
-              <div className="">
+              <div key={fieldName}>
                 <Typography.Text>{fieldName}</Typography.Text>
                 <Controller
                   name={`fields.multiLineText.${fieldName}`}
@@ -329,7 +336,7 @@ const CreateItemModal = ({
           </Typography.Text>
           {collection.fields.date.map((fieldName) => (
             <>
-              <div className="">
+              <div key={fieldName}>
                 <Typography.Text className="block">{fieldName}</Typography.Text>
                 {form.formState.errors.fields?.date &&
                   form.formState.errors.fields.date[fieldName] && (
