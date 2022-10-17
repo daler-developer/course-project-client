@@ -88,15 +88,15 @@ const CreateEditCollectionForm = ({
   useWatch({ name: "image", control: form.control });
 
   const handleSubmit = form.handleSubmit((values) => {
-    // console.log(values);
     if (mode === "edit") {
       editCollectionMutation.mutate({ ...values, collectionId });
+    } else if (mode === "create") {
+      createCollectionMutation.mutate(values, {
+        onSettled() {
+          form.reset();
+        },
+      });
     }
-    // createCollectionMutation.mutate(values, {
-    //   onSettled() {
-    //     form.reset();
-    //   },
-    // });
   });
 
   const handleFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
