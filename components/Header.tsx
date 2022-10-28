@@ -17,41 +17,7 @@ import SearchInput from "./common/SearchInput";
 import AuthNav from "./common/AuthNav";
 
 const Header = () => {
-  const changeThemeMutation = useChangeThemeMutation();
-  const changeLangMutation = useChangeLangMutation();
-
-  const { t } = useTranslation();
-
   const isAuthenticated = useIsAuthenticated();
-
-  const currentUser = useCurrentUser();
-
-  const router = useRouter();
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    window.location.replace("/login");
-  };
-
-  const shouldShowAdminLink = isAuthenticated && currentUser!.isAdmin;
-
-  const handleChangeTheme = (to: ThemeType) => {
-    changeThemeMutation.mutate(to);
-  };
-
-  const handleChangeLang = (to: LangType) => {
-    changeLangMutation.mutate(to);
-  };
-
-  const handleSearch = (search: string) => {
-    router.push(
-      "/search",
-      {
-        query: { search },
-      },
-      { shallow: true }
-    );
-  };
 
   return (
     <div className="fixed top-0 left-0 right-0 shadow-md z-50 bg-white dark:bg-black">

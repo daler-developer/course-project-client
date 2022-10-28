@@ -1,10 +1,7 @@
 import axios from "axios";
+import { AxiosErrorResponseType } from "../types";
 
-const apiClient = axios.create({
-  // ...(process.env.NODE_ENV === "production" && {
-  //   baseURL: "https://daler-course-project-server.herokuapp.com",
-  // }),
-});
+const apiClient = axios.create();
 
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
@@ -15,5 +12,21 @@ apiClient.interceptors.request.use((config) => {
 
   return config;
 });
+
+// apiClient.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (e: AxiosErrorResponseType) => {
+//     const status = e.status;
+
+//     if (status === "401") {
+//       localStorage.removeItem("auth-token");
+//       window.location.replace("/login");
+//     }
+
+//     throw e;
+//   }
+// );
 
 export default apiClient;

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useCurrentUser from "../hooks/common/useCurrentUser";
 import useIsAuthenticated from "../hooks/common/useIsAuthenticated";
 import { useLang } from "../hooks/common/useLang";
@@ -7,7 +7,9 @@ import useGetMeQuery from "../hooks/queries/users/useGetMeQuery";
 import FullScreenLoader from "./FullScreenLoader";
 
 const App = ({ children }: { children: any }) => {
-  const getMeQuery = useGetMeQuery();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const getMeQuery = useGetMeQuery({ enabled: false });
 
   const isAuthenticated = useIsAuthenticated();
   const lang = useLang();
@@ -17,24 +19,47 @@ const App = ({ children }: { children: any }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    (async () => {
+      await fetchCurrentUserIfTokenExists();
+      setIsLoading(false);
+    })();
+  }, []);
+
+  useEffect(() => {
+    const switchTheme = () => {
       if (currentUser!.theme === "dark") {
         document.body.classList.add("dark");
       } else if (currentUser!.theme === "light") {
         document.body.classList.remove("dark");
       }
+    };
+
+    if (isAuthenticated) {
+      switchTheme();
     }
   }, [isAuthenticated, currentUser?.theme]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    const switchLang = () => {
       router.replace(router.asPath, router.asPath, {
         locale: lang,
       });
+    };
+
+    if (isAuthenticated) {
+      switchLang();
     }
   }, [isAuthenticated, lang]);
 
-  if (getMeQuery.isFetching) {
+  const fetchCurrentUserIfTokenExists = async () => {
+    const authToken = localStorage.getItem("accessToken");
+
+    if (authToken) {
+      await getMeQuery.refetch();
+    }
+  };
+
+  if (isLoading) {
     return <FullScreenLoader />;
   }
 

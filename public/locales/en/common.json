@@ -2,5 +2,8 @@
   "search": "Search",
   "topic": "Topic",
   "comment": "Comment",
-  "arbitrary-fields": "Aribtrary fields"
+  "arbitrary-fields": "Aribtrary fields",
+  "login": "Login",
+  "register": "Register",
+  "preview": "Preview"
 }

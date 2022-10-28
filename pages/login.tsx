@@ -7,6 +7,8 @@ import useLoginMutation from "../hooks/mutations/auth/useLoginMutation";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useIsAuthenticated from "../hooks/common/useIsAuthenticated";
+import useRedirectIfLoggedIn from "../hooks/common/useRedirectIfLoggedIn";
+import { useTranslation } from "react-i18next";
 
 interface IFormValues {
   username: string;
@@ -19,19 +21,13 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
+  useRedirectIfLoggedIn();
+
   const form = useForm<IFormValues>({
     resolver: yupResolver(validationSchema),
   });
 
-  const router = useRouter();
-
-  const isAuthenticated = useIsAuthenticated();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated]);
+  const { t } = useTranslation();
 
   const loginMutation = useLoginMutation();
 
@@ -39,12 +35,17 @@ const Login = () => {
     loginMutation.mutate(values);
   });
 
+  const errorMessage = loginMutation.error?.response!.data.message;
+
   return (
     <div className="">
       <form onSubmit={handleSubmit} className="max-w-[500px] mx-auto">
         <Typography.Title level={1} className="text-center">
           Login
         </Typography.Title>
+        {loginMutation.isError && (
+          <Typography.Text type="danger">{errorMessage!}</Typography.Text>
+        )}
         <Controller
           name="username"
           control={form.control}

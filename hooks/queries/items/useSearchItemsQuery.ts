@@ -9,7 +9,7 @@ import * as itemsApi from "../../../api/items";
 
 export default ({ tag, search }: { tag?: string; search?: string }) => {
   const query = useInfiniteQuery<IItem[], AxiosErrorResponseType>(
-    ["items", "list", { search, tag }],
+    ["items", "list", "search"],
     async ({ pageParam }) => {
       const { data } = await itemsApi.searchItems({
         offset: pageParam || 0,

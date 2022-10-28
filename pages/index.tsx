@@ -6,6 +6,7 @@ import useGetLargestCollectionsQuery from "../hooks/queries/collections/useGetLa
 import Collections from "../components/collections/Collections";
 import useGetTagsQuery from "../hooks/queries/tags/useGetTagsQuery";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 
 const itemsTableColumns = [
   {

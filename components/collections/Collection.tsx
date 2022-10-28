@@ -1,23 +1,44 @@
-import { DeleteOutlined, EllipsisOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+} from "@ant-design/icons";
 import { Button, Image, Typography } from "antd";
 import useDeleteCollectionMutation from "../../hooks/mutations/collections/useDeleteCollectionMutation";
 import { ICollection } from "../../types";
 import NextLink from "next/link";
 import ReactMarkdown from "react-markdown";
 import { useTranslation } from "react-i18next";
+import useIsAuthenticated from "../../hooks/common/useIsAuthenticated";
+import useCurrentUser from "../../hooks/common/useCurrentUser";
+import { useState } from "react";
+import EditCollectionModal from "../modals/EditCollectionModal";
 
 interface IProps {
   collection: ICollection;
 }
 
 const Collection = ({ collection }: IProps) => {
+  const [isEditCollectionModalOpen, setIsEditCollectionModalOpen] =
+    useState(false);
+
   const { t } = useTranslation();
+
+  const isAuthenticated = useIsAuthenticated();
+  const currentUser = useCurrentUser();
 
   const deleteCollectionMutation = useDeleteCollectionMutation({
     collectionId: collection._id,
   });
 
   const handleDelete = () => deleteCollectionMutation.mutate();
+
+  const canDelete =
+    isAuthenticated &&
+    (currentUser!.isAdmin || collection.creator._id === currentUser!._id);
+  const canEdit =
+    isAuthenticated &&
+    (currentUser!.isAdmin || collection.creator._id === currentUser!._id);
 
   return (
     <div className="p-[10px] rounded-[5px] shadow-lg bg-white">
@@ -44,12 +65,29 @@ const Collection = ({ collection }: IProps) => {
       </div>
 
       <div className="mt-[20px] flex items-center gap-[5px]">
-        <Button
-          onClick={handleDelete}
-          shape="circle"
-          danger
-          icon={<DeleteOutlined />}
-        />
+        {canDelete && (
+          <Button
+            onClick={handleDelete}
+            shape="circle"
+            danger
+            icon={<DeleteOutlined />}
+          />
+        )}
+        {canEdit && (
+          <>
+            <Button
+              onClick={() => setIsEditCollectionModalOpen(true)}
+              shape={"circle"}
+              icon={<EditOutlined />}
+            />
+
+            <EditCollectionModal
+              isOpen={isEditCollectionModalOpen}
+              onClose={() => setIsEditCollectionModalOpen(false)}
+              collection={collection}
+            />
+          </>
+        )}
       </div>
 
       <NextLink href={`/collections/${collection._id}/items`}>

@@ -2,5 +2,8 @@
   "search": "Поиск",
   "topic": "Тема",
   "comment": "Комментарий",
-  "arbitrary-fields": "Произвольные поля"
+  "arbitrary-fields": "Произвольные поля",
+  "login": "Войти",
+  "register": "Регистрация",
+  "preview": "Превью"
 }

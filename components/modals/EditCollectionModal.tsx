@@ -50,6 +50,7 @@ const EditCollectionModal = ({ isOpen, onClose, collection }: IProps) => {
         <CreateEditCollectionForm
           collectionId={collection._id}
           mode="edit"
+          withTitle={false}
           initialValues={{
             desc: collection.desc,
             fields: collection.fields,

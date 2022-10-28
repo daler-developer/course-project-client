@@ -21,7 +21,7 @@ const SearchInput = () => {
     <Input.Search
       onSearch={handleSearch}
       className="w-[200px]"
-      placeholder={t("common:search")}
+      placeholder={t("placeholders:search")}
     />
   );
 };

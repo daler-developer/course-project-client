@@ -3,7 +3,7 @@
   "block": "Block",
   "edit": "Edit",
   "unblock": "Unblock",
-  "add": "Добавить",
+  "add": "Add",
   "add-to-admins": "Add to admins",
   "remove-from-admins": "Remove from admins",
   "delete": "Delete",
@@ -15,5 +15,5 @@
   "logout": "Logout",
   "new": "New",
   "cancel": "Cancel",
-  "uplaod-img": "Upload image"
+  "upload-img": "Upload image"
 }

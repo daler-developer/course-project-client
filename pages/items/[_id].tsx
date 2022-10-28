@@ -100,7 +100,11 @@ const ItemDetail = () => {
     );
   }
 
-  if (getItemQuery.data) {
+  if (getItemQuery.isError) {
+    return <div>Error</div>;
+  }
+
+  if (getItemQuery.isSuccess) {
     return (
       <>
         <div className="">

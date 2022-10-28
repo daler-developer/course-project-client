@@ -64,6 +64,7 @@ export interface ICollection {
 
 export type AxiosErrorResponseType = AxiosError<{
   message: string;
+  errorType: string;
 }>;
 
 export interface CreateCollectionDto {

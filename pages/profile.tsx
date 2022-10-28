@@ -19,7 +19,7 @@ const Profile = () => {
       <div className="mt-[10px] mx-auto max-w-[500px]">
         <NextLink href="/create-collection" passHref>
           <Button block type="primary">
-            {t("btns:new")}
+            {t("btns:create")}
           </Button>
         </NextLink>
 

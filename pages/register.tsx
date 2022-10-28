@@ -7,6 +7,7 @@ import useRegisterMutation from "../hooks/mutations/auth/useRegisterMutation";
 import { useRouter } from "next/router";
 import useIsAuthenticated from "../hooks/common/useIsAuthenticated";
 import { useEffect } from "react";
+import useRedirectIfLoggedIn from "../hooks/common/useRedirectIfLoggedIn";
 
 interface IFormValues {
   username: string;
@@ -19,25 +20,19 @@ const validationSchema = yup.object({
 });
 
 const Register = () => {
+  useRedirectIfLoggedIn();
+
   const form = useForm<IFormValues>({
     resolver: yupResolver(validationSchema),
   });
 
   const registerMutation = useRegisterMutation();
 
-  const router = useRouter();
-
-  const isAuthenticated = useIsAuthenticated();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated]);
-
   const handleSubmit = form.handleSubmit((values) => {
     registerMutation.mutate(values);
   });
+
+  const errorMessage = registerMutation.error?.response!.data.message;
 
   return (
     <div className="">
@@ -45,6 +40,9 @@ const Register = () => {
         <Typography.Title level={1} className="text-center">
           Register
         </Typography.Title>
+        {registerMutation.isError && (
+          <Typography.Text type="danger">{errorMessage!}</Typography.Text>
+        )}
         <Controller
           name="username"
           control={form.control}

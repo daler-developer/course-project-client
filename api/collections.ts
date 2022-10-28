@@ -87,3 +87,13 @@ export const getCollection = async ({
     `/api/collections/${collectionId}`
   );
 };
+
+export const getCollectionCsv = async ({
+  collectionId,
+}: {
+  collectionId: string;
+}) => {
+  return await apiClient.get<{ csv: string }>(
+    `/api/collections/${collectionId}/csv`
+  );
+};

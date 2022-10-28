@@ -17,7 +17,9 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import useEditCollectionMutation from "../../hooks/mutations/collections/useEditCollectionMutation";
 
-interface ICommonProps {}
+interface ICommonProps {
+  withTitle?: boolean;
+}
 
 interface IEditModeProps extends ICommonProps {
   mode: "edit";
@@ -32,14 +34,15 @@ interface ICreateModeProps extends ICommonProps {
 }
 
 const validationSchema = yup.object({
-  desc: yup.string().required().min(1).max(150),
-  name: yup.string().required().min(1).max(150),
+  desc: yup.string().trim().required().min(1).max(150),
+  name: yup.string().trim().required().min(1).max(150),
 });
 
 const CreateEditCollectionForm = ({
   initialValues,
   mode,
   collectionId,
+  withTitle = true,
 }: IEditModeProps | ICreateModeProps) => {
   const createCollectionMutation = useCreateCollectionMutation();
   const editCollectionMutation = useEditCollectionMutation();
@@ -108,26 +111,30 @@ const CreateEditCollectionForm = ({
   };
 
   const resetImage = () => {
-    form.resetField("image");
+    form.setValue("image", null);
     fileInputRef.current.value = "";
   };
 
   const formSubmitBtnRef = useRef<HTMLButtonElement>(null!);
 
+  const hasPreview = Boolean(form.getValues("desc").trim());
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <button type="submit" hidden ref={formSubmitBtnRef}></button>
-        <Typography.Title level={1} className="text-center">
-          {t("titles:create-collection")}
-        </Typography.Title>
+        {withTitle && (
+          <Typography.Title level={1} className="text-center">
+            {t("titles:create-collection")}
+          </Typography.Title>
+        )}
         <Controller
           name="name"
           control={form.control}
           render={({ field }) => (
             <Input
               style={{ marginTop: "5px" }}
-              placeholder="Name"
+              placeholder={t("placeholders:name")}
               {...(form.formState.errors.name && { status: "error" })}
               {...field}
             />
@@ -148,7 +155,7 @@ const CreateEditCollectionForm = ({
           render={({ field }) => (
             <Input.TextArea
               style={{ marginTop: "5px" }}
-              placeholder="Description"
+              placeholder={t("placeholders:desc")}
               {...(form.formState.errors.desc && { status: "error" })}
               {...field}
             />
@@ -186,8 +193,15 @@ const CreateEditCollectionForm = ({
           hidden
         />
       </form>
-      <Typography.Text className="mt-[20px] block">Preview:</Typography.Text>
-      <ReactMarkdown>{form.getValues("desc")}</ReactMarkdown>
+
+      {hasPreview && (
+        <>
+          <Typography.Text className="mt-[20px] block">
+            {t("common:preview")}:
+          </Typography.Text>
+          <ReactMarkdown>{form.getValues("desc")}</ReactMarkdown>
+        </>
+      )}
 
       <Typography.Title level={4} className="mt-[10px]">
         {t("common:arbitrary-fields")}
@@ -195,7 +209,7 @@ const CreateEditCollectionForm = ({
 
       <div className="mt-[5px]">
         <AddFieldForm
-          title="Integer fields:"
+          title={`${t("titles:integer-fields")}:`}
           fields={form.getValues("fields.integer")}
           onAddNewField={(field) =>
             form.setValue("fields.integer", [
@@ -214,7 +228,7 @@ const CreateEditCollectionForm = ({
 
       <div className="mt-[15px]">
         <AddFieldForm
-          title="Boolean fields:"
+          title={`${t("titles:boolean-fields")}:`}
           fields={form.getValues("fields.boolean")}
           onAddNewField={(field) =>
             form.setValue("fields.boolean", [
@@ -233,7 +247,7 @@ const CreateEditCollectionForm = ({
 
       <div className="mt-[15px]">
         <AddFieldForm
-          title="Date fields:"
+          title={`${t("titles:date-fields")}:`}
           fields={form.getValues("fields.date")}
           onAddNewField={(field) =>
             form.setValue("fields.date", [
@@ -252,7 +266,7 @@ const CreateEditCollectionForm = ({
 
       <div className="mt-[15px]">
         <AddFieldForm
-          title="Text fields:"
+          title={`${t("titles:text-fields")}:`}
           fields={form.getValues("fields.text")}
           onAddNewField={(field) =>
             form.setValue("fields.text", [
@@ -271,7 +285,7 @@ const CreateEditCollectionForm = ({
 
       <div className="mt-[15px]">
         <AddFieldForm
-          title="Multi line text fields:"
+          title={`${t("titles:multi-line-text-fields")}:`}
           fields={form.getValues("fields.multiLineText")}
           onAddNewField={(field) =>
             form.setValue("fields.multiLineText", [
@@ -288,16 +302,30 @@ const CreateEditCollectionForm = ({
         />
       </div>
 
-      <Button
-        htmlType="button"
-        className="mt-[30px]"
-        type="primary"
-        block
-        loading={createCollectionMutation.isLoading}
-        onClick={() => formSubmitBtnRef.current.click()}
-      >
-        {mode === "create" ? t("btns:create") : t("btns:edit")}
-      </Button>
+      {mode === "create" && (
+        <Button
+          htmlType="button"
+          className="mt-[30px]"
+          type="primary"
+          block
+          loading={createCollectionMutation.isLoading}
+          onClick={() => formSubmitBtnRef.current.click()}
+        >
+          {t("btns:create")}
+        </Button>
+      )}
+      {mode === "edit" && (
+        <Button
+          htmlType="button"
+          className="mt-[30px]"
+          type="primary"
+          block
+          loading={editCollectionMutation.isLoading}
+          onClick={() => formSubmitBtnRef.current.click()}
+        >
+          {t("btns:edit")}
+        </Button>
+      )}
     </div>
   );
 };

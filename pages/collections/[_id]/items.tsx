@@ -9,11 +9,11 @@ import useGetCollectionItemQuery from "../../../hooks/queries/items/useGetCollec
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
 import EditCollectionModal from "../../../components/modals/EditCollectionModal";
+import axios from "axios";
+import * as collectionsApi from "../../../api/collections";
 
 const CollectionDetail = () => {
   const [isCreateItemModalVisible, setIsCreateItemModalVisible] =
-    useState(false);
-  const [isEditCollectionModalOpen, setIsEditCollectionModalOpen] =
     useState(false);
 
   const router = useRouter();
@@ -27,6 +27,28 @@ const CollectionDetail = () => {
     collectionId: router.query._id as string,
   });
 
+  const handleLoadCsv = async () => {
+    const response = await collectionsApi.getCollectionCsv({
+      collectionId: getCollectionQuery.data!._id,
+    });
+
+    const aEl = document.createElement("a");
+
+    aEl.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8," + encodeURIComponent(response.data.csv)
+    );
+    aEl.setAttribute("download", "file.csv");
+
+    aEl.style.display = "none";
+
+    document.body.appendChild(aEl);
+
+    aEl.click();
+
+    document.body.removeChild(aEl);
+  };
+
   return (
     <div className="">
       {getCollectionQuery.isFetching ? (
@@ -39,19 +61,15 @@ const CollectionDetail = () => {
             {t("titles:items")}
           </Typography.Title>
           <Button
-            block
-            onClick={() => setIsEditCollectionModalOpen(true)}
-            type="primary"
-          >
-            {t("btns:Edit")}
-          </Button>
-          <Button
             className="mt-[5px]"
             block
             onClick={() => setIsCreateItemModalVisible(true)}
             type="primary"
           >
             {t("btns:new")}
+          </Button>
+          <Button className="mt-[5px]" block onClick={handleLoadCsv}>
+            Load CSV
           </Button>
           {getCollectionItemsQuery.data && (
             <>
@@ -69,11 +87,6 @@ const CollectionDetail = () => {
                 isVisible={isCreateItemModalVisible}
                 collection={getCollectionQuery.data!}
                 onClose={() => setIsCreateItemModalVisible(false)}
-              />
-              <EditCollectionModal
-                isOpen={isEditCollectionModalOpen}
-                onClose={() => setIsEditCollectionModalOpen(false)}
-                collection={getCollectionQuery.data!}
               />
             </>
           )}
