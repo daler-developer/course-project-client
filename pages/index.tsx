@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { Spin, Table, Tag, Typography } from "antd";
+import { Empty, Spin, Table, Tag, Typography } from "antd";
 import useGetLatestItemsQuery from "../hooks/queries/items/useGetLatestItemsQuery";
 import { ICollection, IUser } from "../types";
 import useGetLargestCollectionsQuery from "../hooks/queries/collections/useGetLargestCollectionsQuery";
@@ -39,6 +39,7 @@ const Home = () => {
   const getCollectionsQuery = useGetLargestCollectionsQuery();
   const getTagsQuery = useGetTagsQuery();
 
+  const hasTags = Boolean(getTagsQuery.allTags.length);
   const isLoading =
     getItemsQuery.isLoading ||
     getCollectionsQuery.isLoading ||
@@ -54,31 +55,42 @@ const Home = () => {
 
   return (
     <div className="">
-      <Typography.Title className="text-[white]" level={1}>
+      <Typography.Title className="text-[white] text-center" level={1}>
         {t("titles:latest-items")}
       </Typography.Title>
 
       <Table dataSource={getItemsQuery.allItems} columns={itemsTableColumns} />
 
-      <Typography.Title level={1}>
-        {t("titles:largest-collections")}
-      </Typography.Title>
+      <div className="mt-[30px]">
+        <Typography.Title level={1} className="text-center">
+          {t("titles:largest-collections")}
+        </Typography.Title>
 
-      <Collections
-        isInfinite={false}
-        collections={getCollectionsQuery.allCollections}
-      />
+        <Collections
+          isInfinite={false}
+          collections={getCollectionsQuery.allCollections}
+        />
+      </div>
 
-      <Typography.Title className="mt-[15px]" level={1}>
-        {t("titles:tag-cloud")}
-      </Typography.Title>
+      <div className="mt-[30px]">
+        <Typography.Title level={1} className="text-center">
+          {t("titles:tag-cloud")}
+        </Typography.Title>
 
-      <div className="mt-[10px]">
-        {getTagsQuery.allTags.map((tag) => (
-          <NextLink href={{ pathname: "/search", query: { tag: tag.label } }}>
-            <Tag className="cursor-pointer">{tag.label}</Tag>
-          </NextLink>
-        ))}
+        <div className="mt-[10px]">
+          {hasTags ? (
+            getTagsQuery.allTags.map((tag) => (
+              <NextLink
+                key={tag.label}
+                href={{ pathname: "/search", query: { tag: tag.label } }}
+              >
+                <Tag className="cursor-pointer">{tag.label}</Tag>
+              </NextLink>
+            ))
+          ) : (
+            <Empty />
+          )}
+        </div>
       </div>
     </div>
   );

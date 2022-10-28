@@ -8,13 +8,12 @@ const SearchInput = () => {
   const { t } = useTranslation();
 
   const handleSearch = (search: string) => {
-    router.push(
-      "/search",
-      {
-        query: { search },
+    router.push({
+      pathname: "/search",
+      query: {
+        search,
       },
-      { shallow: true }
-    );
+    });
   };
 
   return (
