@@ -1,5 +1,5 @@
 import { PlusOutlined as PlusIcon } from "@ant-design/icons";
-import { Button, Spin } from "antd";
+import { Button, Empty, Spin } from "antd";
 import { ICollection } from "../../types";
 import Collection from "./Collection";
 
@@ -16,13 +16,19 @@ const Collections = ({
   onFetchNextPage,
   isInfinite = true,
 }: IProps) => {
+  const hasData = Boolean(collections.length);
+
   return (
-    <div className="">
-      <div className="flex flex-col gap-[5px]">
-        {collections.map((collection) => (
-          <Collection key={collection._id} collection={collection} />
-        ))}
-      </div>
+    <div>
+      {hasData ? (
+        <div className="grid grid-cols-[repeat(3,1fr)] gap-[10px] tablet:grid-cols-[repeat(2,1fr)] mobile:grid-cols-[repeat(1,1fr)] ">
+          {collections.map((collection) => (
+            <Collection key={collection._id} collection={collection} />
+          ))}
+        </div>
+      ) : (
+        <Empty description="No collections" />
+      )}
 
       {isInfinite && (
         <>

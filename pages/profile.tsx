@@ -16,7 +16,7 @@ const Profile = () => {
         {t("titles:your-collections")}
       </Typography.Title>
 
-      <div className="mt-[10px] mx-auto max-w-[500px]">
+      <div className="mt-[10px]">
         <NextLink href="/create-collection" passHref>
           <Button block type="primary">
             {t("btns:create")}

@@ -5,5 +5,8 @@
   "arbitrary-fields": "Произвольные поля",
   "login": "Войти",
   "register": "Регистрация",
-  "preview": "Превью"
+  "preview": "Превью",
+  "name": "Название",
+  "collection": "Коллекция",
+  "creator": "Автор"
 }

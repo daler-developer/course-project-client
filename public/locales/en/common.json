@@ -5,5 +5,8 @@
   "arbitrary-fields": "Aribtrary fields",
   "login": "Login",
   "register": "Register",
-  "preview": "Preview"
+  "preview": "Preview",
+  "creator": "Creator",
+  "name": "Name",
+  "collection": "Collection"
 }

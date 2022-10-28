@@ -8,32 +8,32 @@ import useGetTagsQuery from "../hooks/queries/tags/useGetTagsQuery";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 
-const itemsTableColumns = [
-  {
-    key: 1,
-    title: "Name",
-    dataIndex: "name",
-  },
-  {
-    key: 2,
-    title: "Creator",
-    dataIndex: "creator",
-    render(creator: IUser) {
-      return creator.username;
-    },
-  },
-  {
-    key: 3,
-    title: "Collection",
-    dataIndex: "_collection",
-    render(collection: ICollection) {
-      return collection.name;
-    },
-  },
-];
-
 const Home = () => {
   const { t } = useTranslation();
+
+  const itemsTableColumns = [
+    {
+      key: 1,
+      title: t("common:name"),
+      dataIndex: "name",
+    },
+    {
+      key: 2,
+      title: t("common:creator"),
+      dataIndex: "creator",
+      render(creator: IUser) {
+        return creator.username;
+      },
+    },
+    {
+      key: 3,
+      title: t("common:collection"),
+      dataIndex: "_collection",
+      render(collection: ICollection) {
+        return collection.name;
+      },
+    },
+  ];
 
   const getItemsQuery = useGetLatestItemsQuery();
   const getCollectionsQuery = useGetLargestCollectionsQuery();
@@ -64,12 +64,10 @@ const Home = () => {
         {t("titles:largest-collections")}
       </Typography.Title>
 
-      <div className="max-w-[400px]">
-        <Collections
-          isInfinite={false}
-          collections={getCollectionsQuery.allCollections}
-        />
-      </div>
+      <Collections
+        isInfinite={false}
+        collections={getCollectionsQuery.allCollections}
+      />
 
       <Typography.Title className="mt-[15px]" level={1}>
         {t("titles:tag-cloud")}
