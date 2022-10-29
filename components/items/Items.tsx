@@ -4,6 +4,7 @@ import { ColumnsType } from "antd/es/table";
 import { ICollection, IItem } from "../../types";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 interface IProps {
   collection: ICollection;
@@ -13,15 +14,48 @@ interface IProps {
 }
 
 const Items = ({ items, isFetching, onFetchNextPage, collection }: IProps) => {
+  // const [columns, setColumns] = useState<ColumnsType<object>>([]);
+
   const { t } = useTranslation();
+
+  // useEffect(() => {
+  //   generateColumns();
+  // }, []);
+
+  // const generateColumns = () => {
+  //   const list: ColumnsType<object> = [];
+
+  //   list.push({
+  //     key: "name",
+  //     title: "Name",
+  //     dataIndex: `name`,
+  //   });
+
+  //   const numColumnsGenerated = 0;
+
+  //   for (let fieldType of Object.keys(collection.fields)) {
+  //     if ((collection.fields as any)[fieldType].length) {
+  //       (collection.fields as any)[fieldType].forEach((field: any) => {
+  //         list.push({
+  //           key: field,
+  //           title: field,
+  //           dataIndex: `fields`,
+  //           render(fields: any) {
+  //             return <div className="">{fields.text[field]}</div>;
+  //           },
+  //         });
+  //       });
+  //     }
+  //   }
+  // };
 
   const columns = (() => {
     const list: ColumnsType<object> = [];
 
     list.push({
-      key: "_id",
-      title: "_id",
-      dataIndex: `_id`,
+      key: "name",
+      title: "Name",
+      dataIndex: `name`,
     });
 
     if (collection.fields.text) {
@@ -52,7 +86,7 @@ const Items = ({ items, isFetching, onFetchNextPage, collection }: IProps) => {
 
     list.push({
       key: "menu",
-      title: null,
+      title: "Link",
       dataIndex: `_id`,
       render(_id: string) {
         return (

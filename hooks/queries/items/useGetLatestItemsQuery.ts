@@ -21,6 +21,7 @@ export default () => {
 
         return nextOffset;
       },
+      refetchOnMount: true,
     }
   );
 

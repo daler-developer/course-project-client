@@ -1,5 +1,6 @@
 import { PlusOutlined as PlusIcon } from "@ant-design/icons";
 import { Button, Empty, Spin } from "antd";
+import { useTranslation } from "react-i18next";
 import { ICollection } from "../../types";
 import Collection from "./Collection";
 
@@ -16,18 +17,22 @@ const Collections = ({
   onFetchNextPage,
   isInfinite = true,
 }: IProps) => {
+  const { t } = useTranslation();
+
   const hasData = Boolean(collections.length);
 
   return (
     <div>
-      {hasData ? (
+      {hasData && (
         <div className="grid grid-cols-[repeat(3,1fr)] gap-[10px] tablet:grid-cols-[repeat(2,1fr)] mobile:grid-cols-[repeat(1,1fr)] ">
           {collections.map((collection) => (
             <Collection key={collection._id} collection={collection} />
           ))}
         </div>
-      ) : (
-        <Empty description="No collections" />
+      )}
+
+      {!isFetching && !hasData && (
+        <Empty description={t("common:no-collections")} />
       )}
 
       {isInfinite && (

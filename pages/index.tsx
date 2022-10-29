@@ -41,9 +41,9 @@ const Home = () => {
 
   const hasTags = Boolean(getTagsQuery.allTags.length);
   const isLoading =
-    getItemsQuery.isLoading ||
-    getCollectionsQuery.isLoading ||
-    getTagsQuery.isLoading;
+    getItemsQuery.isFetching ||
+    getCollectionsQuery.isFetching ||
+    getTagsQuery.isFetching;
 
   if (isLoading) {
     return (
@@ -88,7 +88,7 @@ const Home = () => {
               </NextLink>
             ))
           ) : (
-            <Empty />
+            <Empty description={t("common:no-tags")} />
           )}
         </div>
       </div>

@@ -8,5 +8,9 @@
   "preview": "Превью",
   "name": "Название",
   "collection": "Коллекция",
-  "creator": "Автор"
+  "creator": "Автор",
+  "no-tags": "Тегов нет",
+  "no-comments": "Комментариев нет",
+  "no-collections": "Коллекций нет",
+  "no-items": "Итемов нет"
 }

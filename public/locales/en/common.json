@@ -8,5 +8,9 @@
   "preview": "Preview",
   "creator": "Creator",
   "name": "Name",
-  "collection": "Collection"
+  "collection": "Collection",
+  "no-tags": "No tags",
+  "no-comments": "No comments",
+  "no-collections": "No collections",
+  "no-items": "No items"
 }

@@ -1,22 +1,24 @@
 import { Button, Spin, Typography } from "antd";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
 import Items from "../../../components/items/Items";
 import CreateItemModal from "../../../components/modals/CreateItemModal";
 import useGetCollectionQuery from "../../../hooks/queries/collections/useGetCollectionQuery";
 import useGetCollectionItemQuery from "../../../hooks/queries/items/useGetCollectionItemQuery";
-import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
-import EditCollectionModal from "../../../components/modals/EditCollectionModal";
-import axios from "axios";
 import * as collectionsApi from "../../../api/collections";
+import useCurrentUser from "../../../hooks/common/useCurrentUser";
+import useIsAuthenticated from "../../../hooks/common/useIsAuthenticated";
 
 const CollectionDetail = () => {
   const [isCreateItemModalVisible, setIsCreateItemModalVisible] =
     useState(false);
 
   const router = useRouter();
+
+  const isAuthenticated = useIsAuthenticated();
+
+  const currentUser = useCurrentUser();
 
   const { t } = useTranslation();
 
@@ -49,6 +51,11 @@ const CollectionDetail = () => {
     document.body.removeChild(aEl);
   };
 
+  const canCreateNewItem =
+    (isAuthenticated && currentUser!.isAdmin) ||
+    (isAuthenticated &&
+      getCollectionQuery.data?.creator._id === currentUser?._id);
+
   return (
     <div className="">
       {getCollectionQuery.isFetching ? (
@@ -60,14 +67,16 @@ const CollectionDetail = () => {
           <Typography.Title level={1} className="text-center">
             {t("titles:items")}
           </Typography.Title>
-          <Button
-            className="mt-[5px]"
-            block
-            onClick={() => setIsCreateItemModalVisible(true)}
-            type="primary"
-          >
-            {t("btns:new")}
-          </Button>
+          {canCreateNewItem && (
+            <Button
+              className="mt-[5px]"
+              block
+              onClick={() => setIsCreateItemModalVisible(true)}
+              type="primary"
+            >
+              {t("btns:new")}
+            </Button>
+          )}
           <Button className="mt-[5px]" block onClick={handleLoadCsv}>
             Load CSV
           </Button>
