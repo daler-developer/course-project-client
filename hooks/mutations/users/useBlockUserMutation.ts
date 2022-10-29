@@ -6,11 +6,12 @@ import {
 import { AxiosErrorResponseType, IUser } from "../../../types";
 import * as usersApi from "../../../api/users";
 import useGetMeQuery from "../../queries/users/useGetMeQuery";
+import useCurrentUser from "../../common/useCurrentUser";
 
 export default (userId: string) => {
   const queryClient = useQueryClient();
 
-  const getMeQuery = useGetMeQuery({ enabled: false });
+  const currentUser = useCurrentUser();
 
   const mutation = useMutation<void, AxiosErrorResponseType>(
     async () => {
@@ -40,6 +41,12 @@ export default (userId: string) => {
             }
           }
         );
+
+        queryClient.setQueryData(["users", "detail"], (oldUser?: IUser) => {
+          if (oldUser?._id === userId) {
+            return { ...oldUser, isBlocked: true };
+          }
+        });
       },
     }
   );

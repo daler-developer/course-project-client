@@ -5,12 +5,15 @@ import {
 } from "@tanstack/react-query";
 import { AxiosErrorResponseType, IUser } from "../../../types";
 import * as usersApi from "../../../api/users";
-import useGetMeQuery from "../../queries/users/useGetMeQuery";
+import useCurrentUser from "../../common/useCurrentUser";
+import { useRouter } from "next/router";
 
 export default (userId: string) => {
   const queryClient = useQueryClient();
 
-  const getMeQuery = useGetMeQuery({ enabled: false });
+  const currentUser = useCurrentUser()!;
+
+  const router = useRouter();
 
   const mutation = useMutation<void, AxiosErrorResponseType>(
     async () => {
@@ -40,6 +43,16 @@ export default (userId: string) => {
             }
           }
         );
+
+        queryClient.setQueryData(["users", "detail"], (oldUser?: IUser) => {
+          if (oldUser?._id === userId) {
+            return { ...oldUser, isAdmin: false };
+          }
+        });
+
+        if (currentUser!._id === userId) {
+          router.back();
+        }
       },
     }
   );

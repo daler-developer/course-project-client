@@ -37,7 +37,7 @@ const TagInput = ({ onAddTag, onRemoveTag, tags }: IProps) => {
 
   const handleClose = (tag: string) => onRemoveTag(tag);
 
-  const options = tagsQuery.allTags;
+  const options = tagsQuery.allTags.map((tag) => ({ value: tag.label }));
 
   return (
     <>

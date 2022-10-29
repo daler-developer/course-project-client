@@ -14,5 +14,6 @@
   "boolean-fields": "Boolean fields",
   "integer-fields": "Integer fields",
   "date-fields": "Date fields",
-  "create-collection": "Create collection"
+  "create-collection": "Create collection",
+  "users": "Users"
 }

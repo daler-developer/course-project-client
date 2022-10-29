@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import useIsAuthenticated from "../hooks/common/useIsAuthenticated";
 import { useEffect } from "react";
 import useRedirectIfLoggedIn from "../hooks/common/useRedirectIfLoggedIn";
+import { GithubOutlined } from "@ant-design/icons";
 
 interface IFormValues {
   username: string;
@@ -77,6 +78,20 @@ const Register = () => {
           className="mt-[30px]"
         >
           Register
+        </Button>
+        <Button
+          block
+          loading={registerMutation.isLoading}
+          className="mt-[5px]"
+          icon={<GithubOutlined />}
+          onClick={() =>
+            window.open(
+              "https://github.com/login/oauth/authorize?client_id=cb3cfd1b84fafe5edd71",
+              "_blank"
+            )
+          }
+        >
+          GitHub
         </Button>
       </form>
     </div>

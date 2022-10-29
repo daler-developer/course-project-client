@@ -5,6 +5,7 @@ import {
   Input,
   InputNumber,
   Modal,
+  Select,
   Tag,
   Typography,
 } from "antd";
@@ -13,7 +14,7 @@ import { useForm, Controller, useWatch } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useCreateItemMutation from "../../hooks/mutations/items/useCreateItemMutation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import TagInput from "../create-item-form/TagInput";
 import { useTranslation } from "react-i18next";
 import useEditItemMutation from "../../hooks/mutations/items/useEditItemMutation";
@@ -52,70 +53,43 @@ const CreateItemModal = ({
 
   const { t } = useTranslation();
 
-  const getIntegerSchema = () => {
-    const schema: any = {};
+  const schema = useMemo(() => {
+    const integerFieldSchema = collection.fields.integer.reduce(
+      (curr, item) => ({ ...curr, [item]: yup.number().required() }),
+      {}
+    );
+    const dateFieldSchema = collection.fields.date.reduce(
+      (curr, item) => ({ ...curr, [item]: yup.string().required() }),
+      {}
+    );
+    const textFieldSchema = collection.fields.text.reduce(
+      (curr, item) => ({ ...curr, [item]: yup.string().trim().required() }),
+      {}
+    );
+    const booleanFieldSchema = collection.fields.boolean.reduce(
+      (curr, item) => ({ ...curr, [item]: yup.boolean().default(false) }),
+      {}
+    );
+    const multiLineTextFieldSchema = collection.fields.multiLineText.reduce(
+      (curr, item) => ({ ...curr, [item]: yup.string().trim().required() }),
+      {}
+    );
 
-    for (let el of collection.fields.integer) {
-      schema[el] = yup.number().required();
-    }
-
-    return yup.object(schema);
-  };
-
-  const getBooleanSchema = () => {
-    const schema: any = {};
-
-    for (let el of collection.fields.boolean) {
-      schema[el] = yup.boolean().default(false);
-    }
-
-    return yup.object(schema);
-  };
-
-  const getTextSchema = () => {
-    const schema: any = {};
-
-    for (let el of collection.fields.text) {
-      schema[el] = yup.string().trim().required();
-    }
-
-    return yup.object(schema);
-  };
-
-  const getMultiLineTextSchema = () => {
-    const schema: any = {};
-
-    for (let el of collection.fields.multiLineText) {
-      schema[el] = yup.string().trim().required();
-    }
-
-    return yup.object(schema);
-  };
-
-  const getDateSchema = () => {
-    const schema: any = {};
-
-    for (let el of collection.fields.date) {
-      schema[el] = yup.string().required();
-    }
-
-    return yup.object(schema);
-  };
+    return yup.object({
+      name: yup.string().required().min(1).max(20),
+      tags: yup.array().of(yup.string().required()).required().default([]),
+      fields: yup.object({
+        integer: yup.object(integerFieldSchema),
+        boolean: yup.object(booleanFieldSchema),
+        text: yup.object(textFieldSchema),
+        multiLineText: yup.object(multiLineTextFieldSchema),
+        date: yup.object(dateFieldSchema),
+      }),
+    });
+  }, [collection]);
 
   const form = useForm<IFormValues>({
-    resolver: yupResolver(
-      yup.object({
-        name: yup.string().required().min(1).max(20),
-        tags: yup.array().of(yup.string().required()).required().default([]),
-        fields: yup.object({
-          integer: getIntegerSchema(),
-          boolean: getBooleanSchema(),
-          text: getTextSchema(),
-          multiLineText: getMultiLineTextSchema(),
-          date: getDateSchema(),
-        }),
-      })
-    ),
+    resolver: yupResolver(schema),
     defaultValues: shouldEdit
       ? initialValues
       : {

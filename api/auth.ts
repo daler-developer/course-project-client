@@ -26,3 +26,9 @@ export const changeLang = async ({ to }: { to: LangType }) => {
     changed: true;
   }>("/api/auth/change-lang", { lang: to });
 };
+
+export const githubOAuth = async ({ code }: { code: string }) => {
+  return await client.patch<{
+    user: IUser;
+  }>("/api/auth/github-oauth", { code });
+};

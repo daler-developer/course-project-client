@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { AxiosErrorResponseType } from "../types";
 
 const apiClient = axios.create();
@@ -13,20 +13,22 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// apiClient.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   (e: AxiosErrorResponseType) => {
-//     const status = e.status;
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (e: AxiosError) => {
+    const status = e.response!.status;
 
-//     if (status === "401") {
-//       localStorage.removeItem("auth-token");
-//       window.location.replace("/login");
-//     }
+    if (status === 401) {
+      localStorage.removeItem("accessToken");
+      window.location.replace("/login");
 
-//     throw e;
-//   }
-// );
+      return;
+    }
+
+    throw e;
+  }
+);
 
 export default apiClient;

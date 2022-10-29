@@ -91,13 +91,12 @@ const CreateEditCollectionForm = ({
   useWatch({ name: "image", control: form.control });
 
   const handleSubmit = form.handleSubmit((values) => {
-    console.log(values);
     if (mode === "edit") {
       editCollectionMutation.mutate({ ...values, collectionId });
     } else if (mode === "create") {
       createCollectionMutation.mutate(values, {
         onSettled() {
-          form.reset();
+          resetForm();
         },
       });
     }
@@ -109,6 +108,11 @@ const CreateEditCollectionForm = ({
 
   const handleRemoveImage = () => {
     resetImage();
+  };
+
+  const resetForm = () => {
+    form.reset();
+    fileInputRef.current.value = "";
   };
 
   const resetImage = () => {
