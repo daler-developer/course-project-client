@@ -48,6 +48,7 @@ const TagInput = ({ onAddTag, onRemoveTag, tags }: IProps) => {
           placeholder="Tag"
           value={inputValue}
           onChange={(v) => setInputValue(v)}
+          onFocus={() => tagsQuery.refetch()}
         />
         <Button htmlType="button" onClick={handleClick}>
           {t("btns:add")}
