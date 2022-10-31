@@ -39,11 +39,21 @@ const Home = () => {
   const getCollectionsQuery = useGetLargestCollectionsQuery();
   const getTagsQuery = useGetTagsQuery();
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getItemsQuery.refetch();
+      getCollectionsQuery.refetch();
+      getTagsQuery.refetch();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const hasTags = Boolean(getTagsQuery.allTags.length);
   const isLoading =
-    getItemsQuery.isFetching ||
-    getCollectionsQuery.isFetching ||
-    getTagsQuery.isFetching;
+    getItemsQuery.isLoading ||
+    getCollectionsQuery.isLoading ||
+    getTagsQuery.isLoading;
 
   if (isLoading) {
     return (

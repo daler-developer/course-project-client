@@ -23,21 +23,28 @@ export default ({ itemId }: { itemId: string }) => {
     },
     {
       onSuccess() {
-        queryClient.setQueriesData(
-          ["items", "list"],
-          (oldData?: InfiniteData<ICollection[]>) => {
-            if (oldData) {
-              const newPages = oldData.pages.map((page) =>
-                page.filter((item) => item._id !== itemId)
-              );
+        const removeItemFromCache = () => {
+          queryClient.setQueriesData(
+            ["items", "list"],
+            (oldData?: InfiniteData<ICollection[]>) => {
+              if (oldData) {
+                const newPages = oldData.pages.map((page) =>
+                  page.filter((item) => item._id !== itemId)
+                );
 
-              return {
-                pages: newPages,
-                pageParams: oldData.pageParams,
-              };
+                return {
+                  pages: newPages,
+                  pageParams: oldData.pageParams,
+                };
+              }
             }
-          }
-        );
+          );
+        };
+
+        const updateCollectionsNumItems = () => {};
+
+        removeItemFromCache();
+        updateCollectionsNumItems();
       },
     }
   );

@@ -15,5 +15,6 @@
   "integer-fields": "Integer fields",
   "date-fields": "Date fields",
   "create-collection": "Create collection",
-  "users": "Users"
+  "users": "Users",
+  "search": "Search"
 }

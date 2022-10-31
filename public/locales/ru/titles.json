@@ -13,5 +13,6 @@
   "integer-fields": "Числовые поля",
   "date-fields": "Даты",
   "create-collection": "Создать коллекцию",
-  "users": "Пользователи"
+  "users": "Пользователи",
+  "search": "Поиск"
 }

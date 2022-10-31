@@ -1,11 +1,14 @@
 import { Spin, Typography } from "antd";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
+import { useTranslation } from "react-i18next";
 import useSearchItemsQuery from "../hooks/queries/items/useSearchItemsQuery";
 import FetchMoreBtn from "../components/common/FetchMoreBtn";
 
 const Search = () => {
   const router = useRouter();
+
+  const { t } = useTranslation();
 
   const itemsQuery = useSearchItemsQuery({
     ...(router.query.tag && { tag: router.query.tag as string }),
@@ -15,7 +18,7 @@ const Search = () => {
   return (
     <div className="">
       <Typography.Title level={1} className="text-center">
-        Search
+        {t("titles:search")}
       </Typography.Title>
 
       {itemsQuery.allItems.map((item) => (

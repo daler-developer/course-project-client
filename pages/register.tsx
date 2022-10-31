@@ -79,7 +79,7 @@ const Register = () => {
         >
           Register
         </Button>
-        <Button
+        {/* <Button
           block
           loading={registerMutation.isLoading}
           className="mt-[5px]"
@@ -92,7 +92,7 @@ const Register = () => {
           }
         >
           GitHub
-        </Button>
+        </Button> */}
       </form>
     </div>
   );
