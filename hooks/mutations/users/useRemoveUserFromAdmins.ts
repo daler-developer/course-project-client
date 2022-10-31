@@ -21,34 +21,38 @@ export default (userId: string) => {
     },
     {
       onSuccess() {
-        queryClient.setQueriesData(
-          ["users", "list"],
-          (oldData?: InfiniteData<IUser[]>) => {
-            if (oldData) {
-              const newPages = oldData.pages.map((page) =>
-                page.map((user) =>
-                  user._id === userId
-                    ? {
-                        ...user,
-                        isAdmin: false,
-                      }
-                    : user
-                )
-              );
+        const updateUsersInCache = () => {
+          queryClient.setQueriesData(
+            ["users", "list"],
+            (oldData?: InfiniteData<IUser[]>) => {
+              if (oldData) {
+                const newPages = oldData.pages.map((page) =>
+                  page.map((user) =>
+                    user._id === userId
+                      ? {
+                          ...user,
+                          isAdmin: false,
+                        }
+                      : user
+                  )
+                );
 
-              return {
-                pages: newPages,
-                pageParams: oldData.pageParams,
-              };
+                return {
+                  pages: newPages,
+                  pageParams: oldData.pageParams,
+                };
+              }
             }
-          }
-        );
+          );
 
-        queryClient.setQueryData(["users", "detail"], (oldUser?: IUser) => {
-          if (oldUser?._id === userId) {
-            return { ...oldUser, isAdmin: false };
-          }
-        });
+          queryClient.setQueriesData(["users", "detail"], (oldUser?: IUser) => {
+            if (oldUser && oldUser._id === userId) {
+              return { ...oldUser, isAdmin: false };
+            }
+          });
+        };
+
+        updateUsersInCache();
 
         if (currentUser!._id === userId) {
           router.back();
