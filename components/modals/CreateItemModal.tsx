@@ -53,8 +53,6 @@ const CreateItemModal = ({
 
   const { t } = useTranslation();
 
-  console.log(initialValues);
-
   const schema = useMemo(() => {
     const integerFieldSchema = collection.fields.integer.reduce(
       (curr, item) => ({ ...curr, [item]: yup.number().required() }),
@@ -178,7 +176,7 @@ const CreateItemModal = ({
         control={form.control}
         render={({ field }) => (
           <Input
-            placeholder="Name"
+            placeholder={t("placeholders:name")}
             className="mt-[5px]"
             {...(form.formState.errors.name && {
               status: "error",

@@ -45,7 +45,7 @@ const TagInput = ({ onAddTag, onRemoveTag, tags }: IProps) => {
         <AutoComplete
           options={options}
           className="flex-grow"
-          placeholder="Tag"
+          placeholder={t("placeholders:tag")}
           value={inputValue}
           onChange={(v) => setInputValue(v)}
           onFocus={() => tagsQuery.refetch()}

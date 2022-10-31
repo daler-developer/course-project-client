@@ -1,7 +1,7 @@
 import { DeleteOutlined, EditOutlined, HeartFilled } from "@ant-design/icons";
 import { Button, List, Spin, Typography } from "antd";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Comments from "../../components/common/comments/Comments";
 import CreateCommentForm from "../../components/item-detail/CreateCommentForm";
@@ -28,6 +28,14 @@ const ItemDetail = () => {
   const likeItemMutation = useLikeItemMutation({ itemId });
   const unlikeItemMutation = useUnlikeItemMutation({ itemId });
   const deleteItemMutation = useDeleteItemMutation({ itemId });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getCommentsQuery.refetch();
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const isAuthenticated = useIsAuthenticated();
 
@@ -251,7 +259,7 @@ const ItemDetail = () => {
           <div className="mt-[10px]">
             <Comments
               comments={getCommentsQuery.allComments}
-              isFetching={getCommentsQuery.isFetching}
+              isFetching={getCommentsQuery.isLoading}
               onFetchNextPage={() => getCommentsQuery.fetchNextPage()}
             />
           </div>

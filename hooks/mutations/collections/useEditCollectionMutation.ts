@@ -32,36 +32,56 @@ export default () => {
     },
     {
       onSuccess(updatedItem) {
-        queryClient.setQueriesData(
-          ["collections", "detail", updatedItem._id],
-          (oldItem?: ICollection) => {
-            if (oldItem) {
-              return updatedItem;
+        const updateCache = () => {
+          queryClient.setQueriesData(
+            ["collections", "detail", updatedItem._id],
+            (oldItem?: ICollection) => {
+              if (oldItem) {
+                return updatedItem;
+              }
             }
-          }
-        );
+          );
 
-        queryClient.setQueriesData(
-          ["collections", "list"],
-          (oldData?: InfiniteData<ICollection[]>) => {
-            if (oldData) {
-              const newPages = oldData.pages.map((page) =>
-                page.map((item) => {
-                  if (item._id === updatedItem._id) {
-                    return updatedItem;
-                  } else {
-                    return item;
-                  }
-                })
-              );
+          queryClient.setQueriesData(
+            ["collections", "list"],
+            (oldData?: InfiniteData<ICollection[]>) => {
+              if (oldData) {
+                const newPages = oldData.pages.map((page) =>
+                  page.map((item) => {
+                    if (item._id === updatedItem._id) {
+                      return updatedItem;
+                    } else {
+                      return item;
+                    }
+                  })
+                );
 
-              return {
-                pages: newPages,
-                pageParams: oldData.pageParams,
-              };
+                return {
+                  pages: newPages,
+                  pageParams: oldData.pageParams,
+                };
+              }
             }
-          }
-        );
+          );
+
+          // queryClient.setQueriesData(
+          //   ["items", "list"],
+          //   (oldData?: InfiniteData<IItem[]>) => {
+          //     if (oldData) {
+          //       const newPages = oldData.pages.map((page) =>
+          //         page.filter((item) => item._collection._id !== collectionId)
+          //       );
+
+          //       return {
+          //         pages: newPages,
+          //         pageParams: oldData.pageParams,
+          //       };
+          //     }
+          //   }
+          // );
+        };
+
+        updateCache();
       },
     }
   );

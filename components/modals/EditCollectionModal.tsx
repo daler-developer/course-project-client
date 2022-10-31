@@ -35,7 +35,7 @@ const EditCollectionModal = ({ isOpen, onClose, collection }: IProps) => {
 
   return (
     <Modal
-      title={"Edit collection"}
+      title={t("titles:edit-collection")}
       open={isOpen}
       onCancel={() => onClose()}
       footer={[

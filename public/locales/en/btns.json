@@ -15,5 +15,6 @@
   "logout": "Logout",
   "new": "New",
   "cancel": "Cancel",
-  "upload-img": "Upload image"
+  "upload-img": "Upload image",
+  "load": "Load"
 }

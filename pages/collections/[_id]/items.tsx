@@ -78,7 +78,7 @@ const CollectionDetail = () => {
             </Button>
           )}
           <Button className="mt-[5px]" block onClick={handleLoadCsv}>
-            Load CSV
+            {t("btns:load")} CSV
           </Button>
           {getCollectionItemsQuery.data && (
             <>
