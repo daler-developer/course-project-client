@@ -15,21 +15,27 @@ export default ({ collectionId }: { collectionId: string }) => {
     },
     {
       onSuccess() {
-        queryClient.setQueriesData(
-          ["collections", "list"],
-          (oldData?: InfiniteData<ICollection[]>) => {
-            if (oldData) {
-              const newPages = oldData.pages.map((page) =>
-                page.filter((collection) => collection._id !== collectionId)
-              );
+        const deleteCollectionsFromCache = () => {
+          queryClient.setQueriesData(
+            ["collections", "list"],
+            (oldData?: InfiniteData<ICollection[]>) => {
+              if (oldData) {
+                const newPages = oldData.pages.map((page) =>
+                  page.filter((collection) => collection._id !== collectionId)
+                );
 
-              return {
-                pages: newPages,
-                pageParams: oldData.pageParams,
-              };
+                return {
+                  pages: newPages,
+                  pageParams: oldData.pageParams,
+                };
+              }
             }
-          }
-        );
+          );
+
+          queryClient.resetQueries(["collections", "detail", collectionId]);
+        };
+
+        deleteCollectionsFromCache();
       },
     }
   );
