@@ -53,6 +53,8 @@ const CreateItemModal = ({
 
   const { t } = useTranslation();
 
+  console.log(initialValues);
+
   const schema = useMemo(() => {
     const integerFieldSchema = collection.fields.integer.reduce(
       (curr, item) => ({ ...curr, [item]: yup.number().required() }),
@@ -232,9 +234,9 @@ const CreateItemModal = ({
                 <Controller
                   name={`fields.boolean.${fieldName}`}
                   control={form.control}
-                  render={({ field }) => (
-                    <Checkbox className="mt-[5px]" {...field} />
-                  )}
+                  render={({ field }) => {
+                    return <Checkbox className="mt-[5px]" {...field} />;
+                  }}
                 />
                 <Typography.Text>{fieldName}</Typography.Text>
               </div>

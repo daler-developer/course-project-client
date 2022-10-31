@@ -27,7 +27,7 @@ const User = ({ user }: IProps) => {
   const handleDelete = () => deleteUserMutation.mutate();
 
   return (
-    <div className="border border-gray-400 border-solid p-[20px] flex items-center justify-between">
+    <div className="border border-gray-400 border-solid p-[20px] flex items-center justify-between bg-white">
       <span className="font-[600] text-[24px]">{user.username}</span>
 
       <div className="flex gap-[5px]">
