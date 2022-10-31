@@ -202,7 +202,7 @@ const ItemDetail = () => {
                   <List.Item>
                     <List.Item.Meta
                       title={entry[0]}
-                      description={entry[1] ? "Yes" : "No"}
+                      description={entry[1] ? t("common:yes") : t("common:no")}
                     />
                   </List.Item>
                 )}

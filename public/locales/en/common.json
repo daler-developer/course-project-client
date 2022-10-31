@@ -12,5 +12,7 @@
   "no-tags": "No tags",
   "no-comments": "No comments",
   "no-collections": "No collections",
-  "no-items": "No items"
+  "no-items": "No items",
+  "yes": "Yes",
+  "no": "No"
 }

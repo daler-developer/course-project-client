@@ -26,6 +26,8 @@ export default () => {
   >(async (param) => {
     const { data } = await itemsApi.createItem(param);
 
+    console.log(param);
+
     return data.item;
   });
 

@@ -4,7 +4,7 @@ import { ColumnsType } from "antd/es/table";
 import { ICollection, IItem } from "../../types";
 import NextLink from "next/link";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface IProps {
   collection: ICollection;
@@ -14,71 +14,63 @@ interface IProps {
 }
 
 const Items = ({ items, isFetching, onFetchNextPage, collection }: IProps) => {
-  // const [columns, setColumns] = useState<ColumnsType<object>>([]);
-
   const { t } = useTranslation();
 
-  // useEffect(() => {
-  //   generateColumns();
-  // }, []);
-
-  // const generateColumns = () => {
-  //   const list: ColumnsType<object> = [];
-
-  //   list.push({
-  //     key: "name",
-  //     title: "Name",
-  //     dataIndex: `name`,
-  //   });
-
-  //   const numColumnsGenerated = 0;
-
-  //   for (let fieldType of Object.keys(collection.fields)) {
-  //     if ((collection.fields as any)[fieldType].length) {
-  //       (collection.fields as any)[fieldType].forEach((field: any) => {
-  //         list.push({
-  //           key: field,
-  //           title: field,
-  //           dataIndex: `fields`,
-  //           render(fields: any) {
-  //             return <div className="">{fields.text[field]}</div>;
-  //           },
-  //         });
-  //       });
-  //     }
-  //   }
-  // };
+  const allNames = useRef(new Set(items.map((item) => item.name)));
 
   const columns = (() => {
-    const list: ColumnsType<object> = [];
+    const list: ColumnsType<IItem> = [];
 
     list.push({
       key: "name",
       title: "Name",
       dataIndex: `name`,
+      filters: [...allNames.current].map((name) => ({
+        text: name,
+        value: name,
+      })),
+      onFilter(value, record) {
+        return record.name === value;
+      },
     });
 
-    if (collection.fields.text) {
-      collection.fields.text.forEach((field) => {
+    if (collection.fields.integer) {
+      collection.fields.integer.forEach((field) => {
         list.push({
           key: field,
           title: field,
           dataIndex: `fields`,
           render(fields: any) {
-            return <div className="">{fields.text[field]}</div>;
+            return <div className="">{fields.integer[field]}</div>;
+          },
+          sorter(a, b) {
+            return b.fields.integer[field] - a.fields.integer[field];
           },
         });
       });
     }
 
-    if (collection.fields.date) {
-      collection.fields.date.forEach((field) => {
+    if (collection.fields.boolean) {
+      collection.fields.boolean.forEach((field) => {
         list.push({
           key: field,
           title: field,
           dataIndex: `fields`,
+          sorter(a, b) {
+            if (a.fields.boolean[field] && !b.fields.boolean[field]) {
+              return -1;
+            }
+            if (!a.fields.boolean[field] && b.fields.boolean[field]) {
+              return 1;
+            }
+            return 0;
+          },
           render(fields: any) {
-            return <div className="">{fields.date[field]}</div>;
+            return (
+              <div className="">
+                {fields.boolean[field] ? t("common:yes") : t("common:no")}
+              </div>
+            );
           },
         });
       });
