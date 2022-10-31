@@ -1,11 +1,5 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import {
-  AxiosErrorResponseType,
-  ICollection,
-  IItem,
-  ITag,
-  IUser,
-} from "../../../types/index";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { AxiosErrorResponseType, ITag } from "../../../types/index";
 import * as tagsApi from "../../../api/tags";
 
 export default () => {
